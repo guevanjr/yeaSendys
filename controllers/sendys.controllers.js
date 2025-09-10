@@ -157,7 +157,7 @@ exports.insertCustomer = async function (req, res) {
                     <IdCAE2>1</IdCAE2>\
                     <NIB></NIB>\
                     <NIF></NIF>\
-                    <Distribuidor></Distribuidor>\
+                    <Distribuidor>false</Distribuidor>\
                     <IDEstadoCliente>1</IDEstadoCliente>\
                     <IdUtilizador_Vendedor>82</IdUtilizador_Vendedor>\
                     <IdActividade>1</IdActividade>\
