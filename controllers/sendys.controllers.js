@@ -349,10 +349,10 @@ exports.addTasks = async function (req, res) {
                 <input>\
                     <IdCliente>' + req.query.customerId + '</IdCliente>\
                     <IdUtilizador>82</IdUtilizador>\
-                    <IdEstadoTarefa>' + req.query.statusId + '</IdEstadoTarefa>\
-                    <IdTipoTarefa>' + req.query.taskType + '</IdTipoTarefa>\
-                    <Nome>' + req.query.taskName + '</Nome>\
-                    <Descricao>' + req.query.taskDescription + '</Descricao>\
+                    <IdEstadoTarefa>1</IdEstadoTarefa>\
+                    <IdTipoTarefa>4</IdTipoTarefa>\
+                    <Nome>' + req.query.name + '</Nome>\
+                    <Descricao>' + req.query.description + '</Descricao>\
                     <Inicio>' + new Date().toISOString() + '</Inicio>\
                     <Fim>' + new Date().toISOString() + '</Fim>\
                     <IncluirNaAgenda>true</IncluirNaAgenda>\
@@ -369,6 +369,18 @@ exports.addTasks = async function (req, res) {
                 }
             ).then(userResponse => {
                 console.log(userResponse.data);
+                
+                var xmlResult = userResponse.data;
+
+                parser.parseString(xmlResult, (err, result) => {
+                    if (err) {
+                        console.error('Error parsing XML:', err);
+                        return;
+                    }
+
+                    res.send({ data: result['soap:Envelope']['soap:Body']/*.QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data*/});
+                })
+
             }).catch(userError => {
                 //console.log(userError.code);
                 res.send({
@@ -495,6 +507,17 @@ exports.getReferenceData = async function (req, res) {
                 }
             ).then(userResponse => {
                 console.log(userResponse.data);
+                var xmlResult = userResponse.data;
+
+                parser.parseString(xmlResult, (err, result) => {
+                    if (err) {
+                        console.error('Error parsing XML:', err);
+                        return;
+                    }
+
+                    res.send({ data: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data});
+                })
+
             }).catch(userError => {
                 //console.log(userError.code);
                 res.send({
