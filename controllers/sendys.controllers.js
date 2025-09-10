@@ -142,12 +142,12 @@ exports.insertCustomer = async function (req, res) {
             <soap:Body>\
                 <Insert xmlns="capgemini/crm/webservices/cliente">\
                 <input>\
-                    <IdFirma></IdFirma>\
-                    <IdNumeracaoAutomatica></IdNumeracaoAutomatica>\
+                    <IdFirma>1</IdFirma>\
+                    <IdNumeracaoAutomatica>1</IdNumeracaoAutomatica>\
                     <Nome>' + req.query.firstname + '</Nome>\
                     <SegundoNome>' + req.query.lastname + '</SegundoNome>\
-                    <Numero></Numero>\
-                    <IdDistribuidor></IdDistribuidor>\
+                    <Numero>1</Numero>\
+                    <IdDistribuidor>1</IdDistribuidor>\
                     <Descricao></Descricao>\
                     <DescricaoPrivada></DescricaoPrivada>\
                     <InformacaoUrgente></InformacaoUrgente>\
@@ -164,9 +164,9 @@ exports.insertCustomer = async function (req, res) {
                     <IdNumEmpregados></IdNumEmpregados>\
                     <IdVolumeNegocios></IdVolumeNegocios>\
                     <IdPrioridade></IdPrioridade>\
-                    <DataInicio></DataInicio>\
-                    <DataFim></DataFim>\
-                    <DataInicioActividade></DataInicioActividade>\
+                    <DataInicio>' + new Date().toISOString() + '</DataInicio>\
+                    <DataFim>' + new Date().toISOString() + '</DataFim>\
+                    <DataInicioActividade>' + new Date().toISOString() + '</DataInicioActividade>\
                     <IBAN></IBAN>\
                 </input>\
                 </Insert>\
