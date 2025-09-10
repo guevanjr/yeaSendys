@@ -187,7 +187,7 @@ exports.insertCustomer = async function (req, res) {
                         return;
                     }
 
-                    res.send({ data: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data});
+                    res.send({ data: result['soap:Envelope']['soap:Body']/*.QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data*/});
                 })
 
             }).catch(userError => {
