@@ -209,7 +209,7 @@ exports.insertCustomer = async function (req, res) {
                     <IdNumEmpregados>7</IdNumEmpregados>\
                     <IdUtilizador_C>82</IdUtilizador_C>\
                 </cliente>\
-                <userid>int</userid>\
+                <userid>82</userid>\
                 </InserirCliente>\
             </soap:Body>\
             </soap:Envelope>';
