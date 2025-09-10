@@ -161,9 +161,9 @@ exports.insertCustomer = async function (req, res) {
                     <IDEstadoCliente>1</IDEstadoCliente>\
                     <IdUtilizador_Vendedor>82</IdUtilizador_Vendedor>\
                     <IdActividade>214</IdActividade>\
-                    <IdNumEmpregados>1</IdNumEmpregados>\
-                    <IdVolumeNegocios>1</IdVolumeNegocios>\
-                    <IdPrioridade>1</IdPrioridade>\
+                    <IdNumEmpregados>7</IdNumEmpregados>\
+                    <IdVolumeNegocios>5</IdVolumeNegocios>\
+                    <IdPrioridade>4</IdPrioridade>\
                     <DataInicio>' + new Date().toISOString() + '</DataInicio>\
                     <DataFim>' + new Date().toISOString() + '</DataFim>\
                     <DataInicioActividade>' + new Date().toISOString() + '</DataInicioActividade>\
