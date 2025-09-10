@@ -5,6 +5,7 @@ const router = express.Router();
 router.get('/all', sendys.getAll);
 router.get('/user', sendys.getUser);
 router.get('/contacts', sendys.getContacts);
+router.get('/references', sendys.getReferenceData);
 
 router.get('/customer', sendys.getCustomer);
 router.post('/customer/add', sendys.insertCustomer);

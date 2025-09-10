@@ -348,7 +348,7 @@ exports.addTasks = async function (req, res) {
                 <Insert xmlns="capgemini/crm/webservices/tarefa">\
                 <input>\
                     <IdCliente>' + req.query.customerId + '</IdCliente>\
-                    <IdUtilizador>' + req.query.userId + '</IdUtilizador>\
+                    <IdUtilizador>82</IdUtilizador>\
                     <IdEstadoTarefa>' + req.query.statusId + '</IdEstadoTarefa>\
                     <IdTipoTarefa>' + req.query.taskType + '</IdTipoTarefa>\
                     <Nome>' + req.query.taskName + '</Nome>\
@@ -415,6 +415,76 @@ exports.addCallDetails = async function (req, res) {
             <soap:Body>\
                 <GetAll xmlns="capgemini/crm/webservices/AreaRelacionada">\
                 <input />\
+                </GetAll>\
+            </soap:Body>\
+            </soap:Envelope>';
+
+            axios.post(userUrl, userRequest, {
+                headers:
+                    {'Content-Type': 'text/xml'}
+                }
+            ).then(userResponse => {
+                console.log(userResponse.data);
+            }).catch(userError => {
+                //console.log(userError.code);
+                res.send({
+                    code: userError.code,
+                    status: userError.response.status,
+                    data: userError.response.data
+                })
+            })
+        });
+
+        //console.log('\n*** ===== FULL RESPONSE === ***\n' + response.data);
+    }).catch(error => {
+        console.log(error);
+    })
+}
+
+exports.getReferenceData = async function (req, res) {
+    /*  
+    === TABLE NAMES ===
+        EstadoAprovacao, EstadoBolsaHoras, EstadoCliente, EstadoContacto, EstadoContrato
+        EstadoFacturacao, EstadoMacroTarefa, EstadoOCP, EstadoPAT, EstadoProcesso
+        EstadoRelatorioVisita, EstadoReuniao, EstadoTarefa, TipoAssistencia, TipoComissao
+        TipoContacto, TipoContrato, TipoDespesa, TipoDistribuicaoOportunidade, TipoDocumento
+        TipoInstalacao, TipoMensagemML, TipoPAT, TipoPlanoFaturacao, TipoRecurso, TipoServidor
+        TipoTarefa, TipoTemplate, TipoViatura, Actividade, AreaNegocio, AreaPAT, AreaRelacionada
+        Cargo, CodigoActividadeEconomica, FaseNoCliente, FaseOportunidade, Genero, Hobby, Idioma
+        NumEmpregados, OrigemOportunidade, OrigemPAT, Pais, PeriodicidadeContrato, PeriodicidadeTarefa
+        Prioridade, Probabilidade, Titulo, VolumeNegocios, Zona
+    ====================
+    */
+    axios.post(tokenUrl, tokenRequest, { 
+        headers:
+             {'Content-Type': 'text/xml'}
+        }
+    ).then(response => {
+        var xmlData = response.data;
+        parser.parseString(xmlData, (err, result) => {
+            if (err) {
+                console.error('Error parsing XML:', err);
+                return;
+            }
+            // Accessing data within the envelope
+            var isGranted = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.AccessGranted;
+            var token = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.Token;
+            console.log('\nIs Granted: ' + isGranted);
+            console.log('Token: ' + token);    
+            
+            var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/ReferenceData.asmx';
+            var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
+            <soap:Header>\
+                <AuthenticationHeader xmlns="capgemini/crm/webservices/referencedata">\
+                <TokenId>' + token + '</TokenId>\
+                </AuthenticationHeader>\
+            </soap:Header>\
+            <soap:Body>\
+                <GetAll xmlns="capgemini/crm/webservices/referencedata">\
+                    <input>\
+                        <Table>' + req.query.table + '</Table>\
+                    </input>\
                 </GetAll>\
             </soap:Body>\
             </soap:Envelope>';
