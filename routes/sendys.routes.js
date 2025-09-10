@@ -2,8 +2,8 @@ const express = require('express');
 const sendys = require('../controllers/sendys.controllers.js');
 const router = express.Router();
 
-router.get('/all', sendys.getAll);
-router.get('/user', sendys.getUser);
+//router.get('/all', sendys.getAll);
+//router.get('/user', sendys.getUser);
 router.get('/contacts', sendys.getContacts);
 router.get('/references', sendys.getReferenceData);
 
