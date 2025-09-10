@@ -201,8 +201,8 @@ exports.insertCustomer = async function (req, res) {
                     <ZonaCliente>86</ZonaCliente>\
                     <Rota>1</Rota>\
                     <Comercial>1</Comercial>\
-                    <DataAlteracao>' + new Date().toISOString + '</DataAlteracao>\
-                    <DataSync>' + new Date().toISOString + '</DataSync>\
+                    <DataAlteracao>' + new Date().toISOString() + '</DataAlteracao>\
+                    <DataSync>' + new Date().toISOString() + '</DataSync>\
                     <IBAN></IBAN>\
                     <GDIdPasta>1</GDIdPasta>\
                     <IdCAE2>714</IdCAE2>\
