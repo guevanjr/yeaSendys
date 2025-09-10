@@ -160,7 +160,7 @@ exports.insertCustomer = async function (req, res) {
                     <Distribuidor>false</Distribuidor>\
                     <IDEstadoCliente>1</IDEstadoCliente>\
                     <IdUtilizador_Vendedor>82</IdUtilizador_Vendedor>\
-                    <IdActividade>1</IdActividade>\
+                    <IdActividade>214</IdActividade>\
                     <IdNumEmpregados>1</IdNumEmpregados>\
                     <IdVolumeNegocios>1</IdVolumeNegocios>\
                     <IdPrioridade>1</IdPrioridade>\
