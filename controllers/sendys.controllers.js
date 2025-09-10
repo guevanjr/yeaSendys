@@ -108,10 +108,8 @@ exports.getCustomer = async function (req, res) {
     })
 }
 
+/* ==== DONE ==== */
 exports.insertCustomer = async function (req, res) {
-    var searchParameter = req.query.parameter;
-    var searchValue = req.query.value;
-
     axios.post(tokenUrl, tokenRequest, { 
         headers:
              {'Content-Type': 'text/xml'}
@@ -126,12 +124,11 @@ exports.insertCustomer = async function (req, res) {
             // Accessing data within the envelope
             var isGranted = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.AccessGranted;
             var token = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.Token;
-            var requestBody = '';
 
             console.log('\nIs Granted: ' + isGranted);
             console.log('Token: ' + token);    
 
-            var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Cliente.asmx';
+            var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Cliente.asmx';/*
             var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
             <soap:Header>\
@@ -170,6 +167,50 @@ exports.insertCustomer = async function (req, res) {
                     <IBAN></IBAN>\
                 </input>\
                 </Insert>\
+            </soap:Body>\
+            </soap:Envelope>';
+*/
+            var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
+            <soap:Body>\
+                <InserirCliente xmlns="capgemini/crm/webservices/cliente">\
+                <cliente>\
+                    <NumContactosCliente>0</NumContactosCliente>\
+                    <NumTarefas>0</NumTarefas>\
+                    <NumPendentes>0</NumPendentes>\
+                    <NumOportunidades>0</NumOportunidades>\
+                    <NumRelatorios>0</NumRelatorios>\
+                    <NumProjetos>0</NumProjetos>\
+                    <NumContactos>1</NumContactos>\
+                    <NumMoradas>1</NumMoradas>\
+                    <NumContratos>0</NumContratos>\
+                    <Descricao></Descricao>\
+                    <Estado>5</Estado>\
+                    <EstadoDescricao></EstadoDescricao>\
+                    <DiasSPG>1</DiasSPG>\
+                    <Morada>' + req.query.address + '</Morada>\
+                    <Localidade>' + req.query.city + '</Localidade>\
+                    <CodigoPostal></CodigoPostal>\
+                    <Website>' + req.query.website + '</Website>\
+                    <Email>' +  req.query.email + '</Email>\
+                    <Telefone>' + req.query.phone + '</Telefone>\
+                    <Telemovel>' + req.query.mobile + '</Telemovel>\
+                    <Distribuidor></Distribuidor>\
+                    <EDistribuidor>false</EDistribuidor>\
+                    <IdDistribuidor>1</IdDistribuidor>\
+                    <ZonaCliente>86</ZonaCliente>\
+                    <Rota>1</Rota>\
+                    <Comercial>1</Comercial>\
+                    <DataAlteracao>' + new Date().toISOString + '</DataAlteracao>\
+                    <DataSync>' + new Date().toISOString + '</DataSync>\
+                    <IBAN></IBAN>\
+                    <GDIdPasta>1</GDIdPasta>\
+                    <IdCAE2>714</IdCAE2>\
+                    <IdNumEmpregados>7</IdNumEmpregados>\
+                    <IdUtilizador_C>82</IdUtilizador_C>\
+                </cliente>\
+                <userid>int</userid>\
+                </InserirCliente>\
             </soap:Body>\
             </soap:Envelope>';
 
