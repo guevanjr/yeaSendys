@@ -152,9 +152,9 @@ exports.insertCustomer = async function (req, res) {
                     <DescricaoPrivada></DescricaoPrivada>\
                     <InformacaoUrgente></InformacaoUrgente>\
                     <WebSite></WebSite>\
-                    <IdZona>1</IdZona>\
-                    <IdCAE>1</IdCAE>\
-                    <IdCAE2>1</IdCAE2>\
+                    <IdZona>86</IdZona>\
+                    <IdCAE></IdCAE>\
+                    <IdCAE2></IdCAE2>\
                     <NIB></NIB>\
                     <NIF></NIF>\
                     <Distribuidor>false</Distribuidor>\
