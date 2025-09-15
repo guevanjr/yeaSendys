@@ -62,12 +62,12 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
                 return;
             }
 
-            //res.send({ data: result['soap:Envelope']['soap:Body']});
+            res.send({ id: result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"]});
             return result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"];
         })
 
     }).catch(userError => {
-        //console.log(userError.code);
+        console.log(userError.code);
         res.send({
             code: userError.code,
             status: userError.response.status,
