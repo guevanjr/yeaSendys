@@ -14,6 +14,67 @@ var tokenRequest = '<?xml version="1.0" encoding="utf-8"?>\
 </soap:Body>\
 </soap:Envelope>';
 
+async function addContacts (customerId, customerName, email, token, phone, mobile) {           
+    var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Tarefa.asmx';
+    var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
+    <soap:Header>\
+        <AuthenticationHeader xmlns="capgemini/crm/webservices/cliente">\
+        <TokenId>' + token + '</TokenId>\
+        </AuthenticationHeader>\
+    </soap:Header>\
+    <soap:Body>\
+        <AdicionarContacto xmlns="capgemini/crm/webservices/cliente">\
+        <contacto>\
+            <Descricao>Contacto principal</Descricao>\
+            <Id>int</Id>\
+            <Nome>' + customerName + '</Nome>\
+            <IdCliente>' + customerId + '</IdCliente>\
+            <IdCargo>4</IdCargo>\
+            <IdTitulo></IdTitulo>\
+            <Telefone>' + phone + '</Telefone>\
+            <Telemovel>' + mobile + '</Telemovel>\
+            <Email>' + email + '</Email>\
+            <Titulo></Titulo>\
+            <Cargo>Utilizador</Cargo>\
+            <Principal>true</Principal>\
+            <DataAlteracao>' + new Date().toISOString() + '</DataAlteracao>\
+            <DataSync>' + new Date().toISOString() + '</DataSync>\
+            <Total>1</Total>\
+        </contacto>\
+        <userid>int</userid>\
+        </AdicionarContacto>\
+    </soap:Body>\
+    </soap:Envelope>';
+
+    axios.post(userUrl, userRequest, {
+        headers:
+            {'Content-Type': 'text/xml'}
+        }
+    ).then(userResponse => {
+        console.log(userResponse.data);
+        
+        var xmlResult = userResponse.data;
+
+        parser.parseString(xmlResult, (err, result) => {
+            if (err) {
+                console.error('Error parsing XML:', err);
+                return;
+            }
+
+            res.send({ data: result['soap:Envelope']['soap:Body']});
+        })
+
+    }).catch(userError => {
+        //console.log(userError.code);
+        res.send({
+            code: userError.code,
+            status: userError.response.status,
+            data: userError.response.data
+        })
+    })
+}
+
 /* === DONE === */
 exports.getCustomer = async function (req, res) {
     var searchParameter = req.query.parameter;
@@ -128,7 +189,7 @@ exports.insertCustomer = async function (req, res) {
             console.log('\nIs Granted: ' + isGranted);
             console.log('Token: ' + token);    
 
-            var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Cliente.asmx';/*
+            var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Cliente.asmx';
             var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
             <soap:Header>\
@@ -169,55 +230,6 @@ exports.insertCustomer = async function (req, res) {
                 </Insert>\
             </soap:Body>\
             </soap:Envelope>';
-*/
-            var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
-            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
-            <soap:Header>\
-                <AuthenticationHeader xmlns="capgemini/crm/webservices/cliente">\
-                <TokenId>' + token + '</TokenId>\
-                </AuthenticationHeader>\
-            </soap:Header>\
-            <soap:Body>\
-                <InserirCliente xmlns="capgemini/crm/webservices/cliente">\
-                <cliente>\
-                    <NumContactosCliente>0</NumContactosCliente>\
-                    <NumTarefas>0</NumTarefas>\
-                    <NumPendentes>0</NumPendentes>\
-                    <NumOportunidades>0</NumOportunidades>\
-                    <NumRelatorios>0</NumRelatorios>\
-                    <NumProjetos>0</NumProjetos>\
-                    <NumContactos>1</NumContactos>\
-                    <NumMoradas>1</NumMoradas>\
-                    <NumContratos>0</NumContratos>\
-                    <Descricao></Descricao>\
-                    <Estado>5</Estado>\
-                    <EstadoDescricao></EstadoDescricao>\
-                    <DiasSPG>1</DiasSPG>\
-                    <Morada>' + req.query.address + '</Morada>\
-                    <Localidade>' + req.query.city + '</Localidade>\
-                    <CodigoPostal></CodigoPostal>\
-                    <Website>' + req.query.website + '</Website>\
-                    <Email>' +  req.query.email + '</Email>\
-                    <Telefone>' + req.query.phone + '</Telefone>\
-                    <Telemovel>' + req.query.mobile + '</Telemovel>\
-                    <Distribuidor></Distribuidor>\
-                    <EDistribuidor>false</EDistribuidor>\
-                    <IdDistribuidor>1</IdDistribuidor>\
-                    <ZonaCliente>86</ZonaCliente>\
-                    <Rota>1</Rota>\
-                    <Comercial>1</Comercial>\
-                    <DataAlteracao>' + new Date().toISOString() + '</DataAlteracao>\
-                    <DataSync>' + new Date().toISOString() + '</DataSync>\
-                    <IBAN></IBAN>\
-                    <GDIdPasta>1</GDIdPasta>\
-                    <IdCAE2>714</IdCAE2>\
-                    <IdNumEmpregados>7</IdNumEmpregados>\
-                    <IdUtilizador_C>82</IdUtilizador_C>\
-                </cliente>\
-                <userid>82</userid>\
-                </InserirCliente>\
-            </soap:Body>\
-            </soap:Envelope>';
 
             axios.post(userUrl, userRequest, {
                 headers:
@@ -233,7 +245,10 @@ exports.insertCustomer = async function (req, res) {
                         return;
                     }
 
-                    res.send({ data: result['soap:Envelope']['soap:Body']/*.QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data*/});
+                    //var customerId = data["InsertResult"][0];
+                    //addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile);
+                    //addContacts (customerId, customerName, email, token, phone, mobile);
+                    res.send({ data: result['soap:Envelope']['soap:Body']});
                 })
 
             }).catch(userError => {
@@ -311,6 +326,7 @@ exports.getUser = async function (req, res) {
 
 exports.getContacts = async function (req, res) {
 }
+
 
 /* === DONE === */
 exports.addTasks = async function (req, res) {
@@ -390,7 +406,6 @@ exports.addTasks = async function (req, res) {
     }).catch(error => {
         console.log(error);
     })
-
 }
 
 exports.addCallDetails = async function (req, res) {
@@ -415,46 +430,46 @@ exports.addCallDetails = async function (req, res) {
             var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
             <soap:Header>\
-                <AuthenticationHeader xmlns="capgemini/crm/webservices/AreaRelacionada">\
-                <TokenId>' + token + '</TokenId>\
+                <AuthenticationHeader xmlns="capgemini/crm/webservices/contacto">\
+                <TokenId>string</TokenId>\
                 </AuthenticationHeader>\
             </soap:Header>\
-                <soap:Body>\
-                    <Insert xmlns="capgemini/crm/webservices/contacto">\
-                    <input>\
-                        <IsHtml>boolean</IsHtml>\
-                        <IdCliente>' + req.query.customerId + '</IdCliente>\
-                        <IdUtilizador>82</IdUtilizador>\
-                        <IdBolsaContacto>int</IdBolsaContacto>\
-                        <IdContactoOrigem>int</IdContactoOrigem>\
-                        <IdTipoContacto>int</IdTipoContacto>\
-                        <IdAreaRelacionada>int</IdAreaRelacionada>\
-                        <IdContrato>int</IdContrato>\
-                        <IdEstadoContacto>int</IdEstadoContacto>\
-                        <IdEstadoAprovacao>int</IdEstadoAprovacao>\
-                        <IdContactoNoCliente>int</IdContactoNoCliente>\
-                        <ParaFacturar>false</ParaFacturar>\
-                        <IdEstadoFacturacao>int</IdEstadoFacturacao>\
-                        <Descricao>' + req.query.details + '</Descricao>\
-                        <Contacto>string</Contacto>\
-                        <Assunto>' + req.query.subject + '</Assunto>\
-                        <NumeroFactura>string</NumeroFactura>\
-                        <HoraInicio>' + req.query.starttime + '</HoraInicio>\
-                        <HoraFim>' + req.query.endtime + '</HoraFim>\
-                        <IdUtilizador_C>int</IdUtilizador_C>\
-                        <Attachments>\
-                        <base64Binary>base64Binary</base64Binary>\
-                        <base64Binary>base64Binary</base64Binary>\
-                        </Attachments>\
-                        <AttachmentsName>\
-                        <string>string</string>\
-                        <string>string</string>\
-                        </AttachmentsName>\
-                        <FileId>int</FileId>\
-                        <FileName>string</FileName>\
-                    </input>\
-                    </Insert>\
-                </soap:Body>\
+            <soap:Body>\
+                <Insert xmlns="capgemini/crm/webservices/contacto">\
+                <input>\
+                    <IsHtml>false</IsHtml>\
+                    <IdCliente>' + req.query.customerId + '</IdCliente>\
+                    <IdUtilizador>82</IdUtilizador>\
+                    <IdBolsaContacto>int</IdBolsaContacto>\
+                    <IdContactoOrigem>int</IdContactoOrigem>\
+                    <IdTipoContacto>' + req.query.calldirection + '</IdTipoContacto>\
+                    <IdAreaRelacionada>int</IdAreaRelacionada>\
+                    <IdContrato>int</IdContrato>\
+                    <IdEstadoContacto>int</IdEstadoContacto>\
+                    <IdEstadoAprovacao>int</IdEstadoAprovacao>\
+                    <IdContactoNoCliente>int</IdContactoNoCliente>\
+                    <ParaFacturar>false</ParaFacturar>\
+                    <IdEstadoFacturacao>int</IdEstadoFacturacao>\
+                    <Descricao>string</Descricao>\
+                    <Contacto>string</Contacto>\
+                    <Assunto>' + req.query.subject + '</Assunto>\
+                    <NumeroFactura>string</NumeroFactura>\
+                    <HoraInicio>' + req.query.starttime + '</HoraInicio>\
+                    <HoraFim>' + req.query.endtime + '</HoraFim>\
+                    <IdUtilizador_C>82</IdUtilizador_C>\
+                    <Attachments>\
+                    <base64Binary>base64Binary</base64Binary>\
+                    <base64Binary>base64Binary</base64Binary>\
+                    </Attachments>\
+                    <AttachmentsName>\
+                    <string>string</string>\
+                    <string>string</string>\
+                    </AttachmentsName>\
+                    <FileId>int</FileId>\
+                    <FileName>string</FileName>\
+                </input>\
+                </Insert>\
+            </soap:Body>\
             </soap:Envelope>';
 
             axios.post(userUrl, userRequest, {
