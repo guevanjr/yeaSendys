@@ -246,7 +246,7 @@ exports.insertCustomer = async function (req, res) {
                         return;
                     }
 
-                    var customerId = data["InsertResponse"]["InsertResult"]["Id"][0];
+                    var customerId = result['soap:Envelope']['soap:Body']["InsertResponse"]["InsertResult"]["Id"][0];
                     //addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile);
                     //addContacts (customerId, customerName, email, token, phone, mobile);
                     res.send({ data: result['soap:Envelope']['soap:Body'],
