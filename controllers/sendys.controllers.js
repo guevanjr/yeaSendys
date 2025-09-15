@@ -62,7 +62,8 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
                 return;
             }
 
-            res.send({ data: result['soap:Envelope']['soap:Body']});
+            //res.send({ data: result['soap:Envelope']['soap:Body']});
+            return data["InsertResponse"]["InsertResult"]["Id"][0];
         })
 
     }).catch(userError => {
@@ -245,10 +246,12 @@ exports.insertCustomer = async function (req, res) {
                         return;
                     }
 
-                    //var customerId = data["InsertResult"][0];
+                    var customerId = data["InsertResponse"]["InsertResult"]["Id"][0];
                     //addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile);
                     //addContacts (customerId, customerName, email, token, phone, mobile);
-                    res.send({ data: result['soap:Envelope']['soap:Body']});
+                    res.send({ data: result['soap:Envelope']['soap:Body'],
+                        contact: addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile)
+                    });
                 })
 
             }).catch(userError => {
