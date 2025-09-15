@@ -63,7 +63,7 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
             }
 
             //res.send({ data: result['soap:Envelope']['soap:Body']});
-            return data["InsertResponse"]["InsertResult"]["Id"][0];
+            return result['soap:Envelope']['soap:Body']["InsertResponse"]["InsertResult"]["Id"][0];
         })
 
     }).catch(userError => {
