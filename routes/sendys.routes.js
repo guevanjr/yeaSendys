@@ -5,10 +5,10 @@ const router = express.Router();
 //router.get('/all', sendys.getAll);
 //router.get('/user', sendys.getUser);
 router.get('/contacts', sendys.getContacts);
-router.post('/contacts/', sendys.addContacts);
+//router.post('/contacts/', sendys.addContacts);
 
 router.get('/references', sendys.getReferenceData);
-router.post('/address', sendys.addAddress);
+//router.post('/address', sendys.addAddress);
 
 router.get('/customer', sendys.getCustomer);
 router.post('/customer/', sendys.insertCustomer);
