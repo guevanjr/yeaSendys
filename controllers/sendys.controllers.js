@@ -63,7 +63,7 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
             }
 
             //res.send({ data: result['soap:Envelope']['soap:Body']});
-            return result['soap:Envelope']['soap:Body']["InsertResponse"]["InsertResult"]["Id"][0];
+            return result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"];
         })
 
     }).catch(userError => {
@@ -237,7 +237,7 @@ exports.insertCustomer = async function (req, res) {
                     {'Content-Type': 'text/xml'}
                 }
             ).then(userResponse => {
-                console.log(userResponse.data);
+                //console.log(userResponse.data);
                 var xmlResult = userResponse.data;
 
                 parser.parseString(xmlResult, (err, result) => {
