@@ -378,6 +378,8 @@ exports.addContacts = async function (req, res) {
             </soap:Body>\
             </soap:Envelope>';
 
+            console.log('Request: \n' + userRequest);
+
             axios.post(userUrl, userRequest, {
                 headers:
                     {'Content-Type': 'text/xml'}
@@ -386,19 +388,18 @@ exports.addContacts = async function (req, res) {
                 console.log(userResponse.data);
                 
                 var xmlResult = userResponse.data;
-
                 parser.parseString(xmlResult, (err, result) => {
                     if (err) {
                         console.error('Error parsing XML:', err);
                         return;
                     }
 
-                    res.send({ id: result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"]});
+                    res.send({ data: result['soap:Envelope']['soap:Body']/*["AdicionarContactoResponse "]["AdicionarContactoResult"]*/});
                     //return result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"];
                 })
 
             }).catch(userError => {
-                console.log(userError.data);
+                console.log('Second Call Error: ' + userError);
                 /*
                 res.send({
                     code: userError.code,
@@ -408,7 +409,7 @@ exports.addContacts = async function (req, res) {
             })
         });
     }).catch(error => {
-        console.log(error);
+        console.log('First Call Error: ' + error);
     })
 }
 
