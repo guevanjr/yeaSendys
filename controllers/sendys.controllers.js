@@ -343,9 +343,10 @@ exports.addContacts = async function (req, res) {
             // Accessing data within the envelope
             var isGranted = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.AccessGranted;
             var token = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.Token;
+
             console.log('\nIs Granted: ' + isGranted);
             console.log('Token: ' + token);    
-            
+
             var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Cliente.asmx';
             var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
@@ -357,12 +358,12 @@ exports.addContacts = async function (req, res) {
             <soap:Body>\
                 <AdicionarContacto xmlns="capgemini/crm/webservices/cliente">\
                 <contacto>\
-                    <Descricao>Contacto principal</Descricao>\
+                    <Descricao>string</Descricao>\
                     <Id>1</Id>\
-                    <Nome>' + req.query.name + '</Nome>\
+                    <Nome>string</Nome>\
                     <IdCliente>' + req.query.id + '</IdCliente>\
                     <IdCargo>4</IdCargo>\
-                    <IdTitulo>0</IdTitulo>\
+                    <IdTitulo></IdTitulo>\
                     <Telefone>' + req.query.phone + '</Telefone>\
                     <Telemovel>' + req.query.mobile + '</Telemovel>\
                     <Email>' + req.query.email + '</Email>\
@@ -378,38 +379,41 @@ exports.addContacts = async function (req, res) {
             </soap:Body>\
             </soap:Envelope>';
 
-            console.log('Request: \n' + userRequest);
-
             axios.post(userUrl, userRequest, {
                 headers:
                     {'Content-Type': 'text/xml'}
                 }
             ).then(userResponse => {
-                console.log(userResponse.data);
-                
+                //console.log(userResponse.data);
                 var xmlResult = userResponse.data;
+
                 parser.parseString(xmlResult, (err, result) => {
                     if (err) {
                         console.error('Error parsing XML:', err);
                         return;
                     }
 
-                    res.send({ data: result['soap:Envelope']['soap:Body']/*["AdicionarContactoResponse "]["AdicionarContactoResult"]*/});
-                    //return result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"];
+                    //var customerId = result['soap:Envelope']['soap:Body']["InsertResponse"]["InsertResult"]["Id"][0];
+                    //addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile);
+                    //addContacts (customerId, customerName, email, token, phone, mobile);
+                    res.send({ data: result['soap:Envelope']['soap:Body']/*,
+                        contact: addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile)*/
+                    });
                 })
 
             }).catch(userError => {
-                console.log('Second Call Error: ' + userError);
-                /*
+                console.log('\nError: \n' + userError);
                 res.send({
                     code: userError.code,
                     status: userError.response.status,
                     data: userError.response.data
-                })*/
+                })
             })
         });
+
+        //console.log('\n*** ===== FULL RESPONSE === ***\n' + response.data);
     }).catch(error => {
-        console.log('First Call Error: ' + error);
+        console.log(error);
     })
 }
 
