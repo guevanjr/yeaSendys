@@ -373,7 +373,7 @@ exports.addContacts = async function (req, res) {
                     <DataSync>' + new Date().toISOString() + '</DataSync>\
                     <Total>1</Total>\
                 </contacto>\
-                <userid>int</userid>\
+                <userid>82</userid>\
                 </AdicionarContacto>\
             </soap:Body>\
             </soap:Envelope>';
