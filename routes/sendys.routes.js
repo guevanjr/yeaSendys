@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/contacts/', sendys.addContacts);
 
 router.get('/references', sendys.getReferenceData);
-//router.post('/address', sendys.addAddress);
+router.post('/address', sendys.addAddress);
 
 router.get('/customer', sendys.getCustomer);
 router.post('/customer/', sendys.insertCustomer);

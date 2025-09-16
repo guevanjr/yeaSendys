@@ -413,6 +413,83 @@ exports.addContacts = async function (req, res) {
     })
 }
 
+exports.addAddress = async function (req, res) {
+    axios.post(tokenUrl, tokenRequest, { 
+        headers:
+             {'Content-Type': 'text/xml'}
+        }
+    ).then(response => {
+        var xmlData = response.data;
+        parser.parseString(xmlData, (err, result) => {
+            if (err) {
+                console.error('Error parsing XML:', err);
+                return;
+            }
+            // Accessing data within the envelope
+            var isGranted = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.AccessGranted;
+            var token = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.Token;
+            console.log('\nIs Granted: ' + isGranted);
+            console.log('Token: ' + token);    
+            
+            var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Cliente.asmx';
+            var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
+            <soap:Header>\
+                <AuthenticationHeader xmlns="capgemini/crm/webservices/cliente">\
+                <TokenId>string</TokenId>\
+                </AuthenticationHeader>\
+            </soap:Header>\
+            <soap:Body>\
+                <AdicionarMorada xmlns="capgemini/crm/webservices/cliente">\
+                <morada>\
+                    <Id>1</Id>\
+                    <IdCliente>' + req.query.id + '</IdCliente>\
+                    <Morada>' + req.query.address + '</Morada>\
+                    <Distancia>1</Distancia>\
+                    <Localidade>' + req.query.city + '</Localidade>\
+                    <CodigoPostal></CodigoPostal>\
+                    <Descricao></Descricao>\
+                    <Principal>true</Principal>\
+                </morada>\
+                <userid>82</userid>\
+                </AdicionarMorada>\
+            </soap:Body>\
+            </soap:Envelope>';
+
+            console.log('Request: \n' + userRequest);
+
+            axios.post(userUrl, userRequest, {
+                headers:
+                    {'Content-Type': 'text/xml'}
+                }
+            ).then(userResponse => {
+                console.log(userResponse.data);
+                
+                var xmlResult = userResponse.data;
+                parser.parseString(xmlResult, (err, result) => {
+                    if (err) {
+                        console.error('Error parsing XML:', err);
+                        return;
+                    }
+
+                    res.send({ data: result['soap:Envelope']['soap:Body']/*["AdicionarContactoResponse "]["AdicionarContactoResult"]*/});
+                    //return result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"];
+                })
+
+            }).catch(userError => {
+                console.log('Second Call Error: ' + userError);
+                /*
+                res.send({
+                    code: userError.code,
+                    status: userError.response.status,
+                    data: userError.response.data
+                })*/
+            })
+        });
+    }).catch(error => {
+        console.log('First Call Error: ' + error);
+    })
+}
 
 /* === DONE === */
 exports.addTasks = async function (req, res) {
