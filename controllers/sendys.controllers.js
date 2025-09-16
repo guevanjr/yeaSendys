@@ -363,9 +363,9 @@ exports.addContacts = async function (req, res) {
                     <IdCliente>' + req.query.id + '</IdCliente>\
                     <IdCargo>4</IdCargo>\
                     <IdTitulo></IdTitulo>\
-                    <Telefone>' + phone + '</Telefone>\
-                    <Telemovel>' + mobile + '</Telemovel>\
-                    <Email>' + email + '</Email>\
+                    <Telefone>' + req.query.phone + '</Telefone>\
+                    <Telemovel>' + req.query.mobile + '</Telemovel>\
+                    <Email>' + req.query.email + '</Email>\
                     <Titulo></Titulo>\
                     <Cargo>Utilizador</Cargo>\
                     <Principal>true</Principal>\
