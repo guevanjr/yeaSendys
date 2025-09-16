@@ -328,7 +328,88 @@ exports.getUser = async function (req, res) {
 }
 */
 
-exports.getContacts = async function (req, res) {
+exports.addContacts = async function (req, res) {
+    axios.post(tokenUrl, tokenRequest, { 
+        headers:
+             {'Content-Type': 'text/xml'}
+        }
+    ).then(response => {
+        var xmlData = response.data;
+        parser.parseString(xmlData, (err, result) => {
+            if (err) {
+                console.error('Error parsing XML:', err);
+                return;
+            }
+            // Accessing data within the envelope
+            var isGranted = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.AccessGranted;
+            var token = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.Token;
+            console.log('\nIs Granted: ' + isGranted);
+            console.log('Token: ' + token);    
+            
+            var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Cliente.asmx';
+            var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
+            <soap:Header>\
+                <AuthenticationHeader xmlns="capgemini/crm/webservices/cliente">\
+                <TokenId>' + token + '</TokenId>\
+                </AuthenticationHeader>\
+            </soap:Header>\
+            <soap:Body>\
+                <AdicionarContacto xmlns="capgemini/crm/webservices/cliente">\
+                <contacto>\
+                    <Descricao>Contacto principal</Descricao>\
+                    <Id>int</Id>\
+                    <Nome>' + customerName + '</Nome>\
+                    <IdCliente>' + customerId + '</IdCliente>\
+                    <IdCargo>4</IdCargo>\
+                    <IdTitulo></IdTitulo>\
+                    <Telefone>' + phone + '</Telefone>\
+                    <Telemovel>' + mobile + '</Telemovel>\
+                    <Email>' + email + '</Email>\
+                    <Titulo></Titulo>\
+                    <Cargo>Utilizador</Cargo>\
+                    <Principal>true</Principal>\
+                    <DataAlteracao>' + new Date().toISOString() + '</DataAlteracao>\
+                    <DataSync>' + new Date().toISOString() + '</DataSync>\
+                    <Total>1</Total>\
+                </contacto>\
+                <userid>int</userid>\
+                </AdicionarContacto>\
+            </soap:Body>\
+            </soap:Envelope>';
+
+            axios.post(userUrl, userRequest, {
+                headers:
+                    {'Content-Type': 'text/xml'}
+                }
+            ).then(userResponse => {
+                console.log(userResponse.data);
+                
+                var xmlResult = userResponse.data;
+
+                parser.parseString(xmlResult, (err, result) => {
+                    if (err) {
+                        console.error('Error parsing XML:', err);
+                        return;
+                    }
+
+                    res.send({ id: result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"]});
+                    //return result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"];
+                })
+
+            }).catch(userError => {
+                console.log(userError.data);
+                /*
+                res.send({
+                    code: userError.code,
+                    status: userError.response.status,
+                    data: userError.response.data
+                })*/
+            })
+        });
+    }).catch(error => {
+        console.log(error);
+    })
 }
 
 

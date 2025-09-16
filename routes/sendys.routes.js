@@ -4,8 +4,8 @@ const router = express.Router();
 
 //router.get('/all', sendys.getAll);
 //router.get('/user', sendys.getUser);
-router.get('/contacts', sendys.getContacts);
-//router.post('/contacts/', sendys.addContacts);
+//router.get('/contacts', sendys.getContacts);
+router.post('/contacts/', sendys.addContacts);
 
 router.get('/references', sendys.getReferenceData);
 //router.post('/address', sendys.addAddress);
