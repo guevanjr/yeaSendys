@@ -358,9 +358,9 @@ exports.addContacts = async function (req, res) {
                 <AdicionarContacto xmlns="capgemini/crm/webservices/cliente">\
                 <contacto>\
                     <Descricao>Contacto principal</Descricao>\
-                    <Id>int</Id>\
-                    <Nome>' + customerName + '</Nome>\
-                    <IdCliente>' + customerId + '</IdCliente>\
+                    <Id>1</Id>\
+                    <Nome>' + req.query.name + '</Nome>\
+                    <IdCliente>' + req.query.id + '</IdCliente>\
                     <IdCargo>4</IdCargo>\
                     <IdTitulo></IdTitulo>\
                     <Telefone>' + phone + '</Telefone>\
