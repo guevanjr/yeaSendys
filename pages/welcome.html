@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Form Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #4e54c8;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #4e54c8;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(78, 84, 200, 0.2);
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .btn {
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: #4e54c8;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3f44af;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .response-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h3 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            color: #4e54c8;
+        }
+        
+        .api-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .api-info h3 {
+            color: #4e54c8;
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: #4e54c8;
+            border-bottom: 3px solid #4e54c8;
+        }
+        
+        @media (max-width: 768px) {
+            .form-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <header>
+                <h1><i class="fas fa-file-alt"></i> User Form Portal</h1>
+                <p>Your webapp that responds with pre-filled forms based on user data</p>
+            </header>
+            
+            <div class="content">
+                <div class="tabs">
+                    <div class="tab" :class="{ active: activeTab === 'form' }" @click="activeTab = 'form'">
+                        <i class="fas fa-form"></i> Form View
+                    </div>
+                    <div class="tab" :class="{ active: activeTab === 'api' }" @click="activeTab = 'api'">
+                        <i class="fas fa-code"></i> API Integration
+                    </div>
+                </div>
+                
+                <div v-if="activeTab === 'form'">
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Personal Information</h3>
+                        <div class="form-container">
+                            <div class="form-group">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" v-model="formData.name" placeholder="Enter your name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" v-model="formData.email" placeholder="Enter your email">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" v-model="formData.phone" placeholder="Enter your phone number">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" id="address" v-model="formData.address" placeholder="Enter your address">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-credit-card"></i> Additional Information</h3>
+                        <div class="form-container">
+                            <div class="form-group">
+                                <label for="company">Company</label>
+                                <input type="text" id="company" v-model="formData.company" placeholder="Enter your company">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="position">Position</label>
+                                <input type="text" id="position" v-model="formData.position" placeholder="Enter your position">
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="message">Message</label>
+                                <textarea id="message" v-model="formData.message" rows="4" placeholder="Enter your message"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="actions">
+                        <button class="btn btn-primary" @click="simulateUserExists">
+                            <i class="fas fa-user-check"></i> Simulate User Exists
+                        </button>
+                        
+                        <button class="btn btn-secondary" @click="simulateNewUser">
+                            <i class="fas fa-user-plus"></i> Simulate New User
+                        </button>
+                    </div>
+                    
+                    <div v-if="responseMessage" :class="['response-message', responseType]">
+                        {{ responseMessage }}
+                    </div>
+                </div>
+                
+                <div v-if="activeTab === 'api'">
+                    <div class="api-info">
+                        <h3><i class="fas fa-cogs"></i> API Integration Guide</h3>
+                        <p>Your webapp receives API requests from external applications and responds with a pre-filled form if the user exists, or an empty form if not.</p>
+                        
+                        <h4>API Endpoint:</h4>
+                        <div class="code-block">
+                            POST /api/user-form
+                        </div>
+                        
+                        <h4>Expected Request Format:</h4>
+                        <div class="code-block">
+                            {<br>
+                            &nbsp;&nbsp;"userId": "12345",<br>
+                            &nbsp;&nbsp;"sourceApp": "external-app"<br>
+                            }
+                        </div>
+                        
+                        <h4>Response Format (User Exists):</h4>
+                        <div class="code-block">
+                            {<br>
+                            &nbsp;&nbsp;"status": "success",<br>
+                            &nbsp;&nbsp;"userExists": true,<br>
+                            &nbsp;&nbsp;"userData": {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"name": "John Doe",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"email": "john.doe@example.com",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"phone": "+1 (555) 123-4567",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;// ... other fields<br>
+                            &nbsp;&nbsp;},<br>
+                            &nbsp;&nbsp;"formUrl": "https://your-webapp.com/form?prefill=true&userId=12345"<br>
+                            }
+                        </div>
+                        
+                        <h4>Response Format (New User):</h4>
+                        <div class="code-block">
+                            {<br>
+                            &nbsp;&nbsp;"status": "success",<br>
+                            &nbsp;&nbsp;"userExists": false,<br>
+                            &nbsp;&nbsp;"formUrl": "https://your-webapp.com/form?prefill=false"<br>
+                            }
+                        </div>
+                        
+                        <h4>Node.js/Express Backend Example:</h4>
+                        <div class="code-block">
+                            app.post('/api/user-form', async (req, res) => {<br>
+                            &nbsp;&nbsp;const { userId, sourceApp } = req.body;<br>
+                            &nbsp;&nbsp;try {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;// Check if user exists in database<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;const user = await User.findById(userId);<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;if (user) {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// User exists - return pre-filled form URL<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res.json({<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: 'success',<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;userExists: true,<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;userData: user,<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;formUrl: `https://your-webapp.com/form?prefill=true&userId=${userId}`<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// New user - return empty form URL<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res.json({<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: 'success',<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;userExists: false,<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;formUrl: 'https://your-webapp.com/form?prefill=false'<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                            &nbsp;&nbsp;} catch (error) {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;res.status(500).json({<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: 'error',<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;message: 'Internal server error'<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+                            &nbsp;&nbsp;}<br>
+                            });
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                formData: {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    address: '',
+                    company: '',
+                    position: '',
+                    message: ''
+                },
+                responseMessage: '',
+                responseType: 'success',
+                activeTab: 'form'
+            },
+            methods: {
+                simulateUserExists() {
+                    // Simulate API response for existing user
+                    this.responseMessage = 'User found! Pre-filling form with user data...';
+                    this.responseType = 'success';
+                    
+                    // Simulate user data from database
+                    const userData = {
+                        name: 'John Doe',
+                        email: 'john.doe@example.com',
+                        phone: '+1 (555) 123-4567',
+                        address: '123 Main St, New York, NY 10001',
+                        company: 'Acme Inc',
+                        position: 'Software Developer',
+                        message: 'I am interested in learning more about your services.'
+                    };
+                    
+                    // Pre-fill the form
+                    this.formData = userData;
+                    
+                    // Simulate redirect to form page with pre-filled data
+                    setTimeout(() => {
+                        this.responseMessage = 'Redirecting to pre-filled form...';
+                    }, 1500);
+                },
+                
+                simulateNewUser() {
+                    // Simulate API response for new user
+                    this.responseMessage = 'User not found. Preparing empty form...';
+                    this.responseType = 'success';
+                    
+                    // Clear the form
+                    this.formData = {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        address: '',
+                        company: '',
+                        position: '',
+                        message: ''
+                    };
+                    
+                    // Simulate redirect to empty form
+                    setTimeout(() => {
+                        this.responseMessage = 'Redirecting to empty form...';
+                    }, 1500);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
