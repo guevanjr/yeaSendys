@@ -256,42 +256,47 @@
                     <h3><i class="fas fa-user"></i> Personal Information</h3>
                     <div class="form-container">
                         <div class="form-group">
-                            <label for="name">Full Name</label>
+                            <label for="name">Nome do Contacto</label>
                             <input type="text" id="name" v-model="formData.name" placeholder="Enter your name">
                         </div>
                         
                         <div class="form-group">
-                            <label for="email">Email Address</label>
+                            <label for="email">E-mail</label>
                             <input type="email" id="email" v-model="formData.email" placeholder="Enter your email">
                         </div>
                         
                         <div class="form-group">
-                            <label for="phone">Phone Number</label>
+                            <label for="phone">Telefone</label>
                             <input type="tel" id="phone" v-model="formData.phone" placeholder="Enter your phone number">
                         </div>
                         
                         <div class="form-group">
-                            <label for="address">Address</label>
+                            <label for="phone">Telemóvel</label>
+                            <input type="tel" id="mobile" v-model="formData.phone" placeholder="Enter your phone number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Endereço</label>
                             <input type="text" id="address" v-model="formData.address" placeholder="Enter your address">
                         </div>
                     </div>
                 </div>
                 
                 <div class="form-section">
-                    <h3><i class="fas fa-credit-card"></i> Additional Information</h3>
+                    <h3><i class="fas fa-credit-card"></i> Outras Informações</h3>
                     <div class="form-container">
                         <div class="form-group">
-                            <label for="company">Company</label>
+                            <label for="company">Nome da Empresa</label>
                             <input type="text" id="company" v-model="formData.company" placeholder="Enter your company">
                         </div>
                         
                         <div class="form-group">
-                            <label for="position">Position</label>
-                            <input type="text" id="position" v-model="formData.position" placeholder="Enter your position">
+                            <label for="position">Cidade ou Localidade</label>
+                            <input type="text" id="city" v-model="formData.position" placeholder="Enter your position">
                         </div>
                         
                         <div class="form-group full-width">
-                            <label for="message">Message</label>
+                            <label for="message">Comentários</label>
                             <textarea id="message" v-model="formData.message" rows="4" placeholder="Enter your message"></textarea>
                         </div>
                     </div>
@@ -299,11 +304,11 @@
                 
                 <div class="actions">
                     <button class="btn btn-primary" @click="submitForm">
-                        <i class="fas fa-paper-plane"></i> Submit Form
+                        <i class="fas fa-paper-plane"></i> Submeter
                     </button>
                     
                     <button class="btn btn-secondary" @click="simulateNewUser">
-                        <i class="fas fa-times"></i> Clear Form
+                        <i class="fas fa-times"></i> Limpar
                     </button>
                 </div>
                 

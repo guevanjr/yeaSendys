@@ -218,7 +218,8 @@ exports.getCustomer = async function (req, res) {
                             formUrl: `https://localhost:9901/public/webform.html?${params}`
                         });
                         */
-                       res.redirect(`https://localhost:9901/public/webform.html?${params}`);
+                       //res.redirect(`https://162.214.150.246/pages/webform.html?${params}`);
+                       res.redirect(`https://162.214.150.246/?${params}`);
                         } else {
                         // New user - return URL for empty form
                         /*
@@ -228,7 +229,8 @@ exports.getCustomer = async function (req, res) {
                             formUrl: 'https://localhost:9901/public/webform.html?prefill=false'
                         });
                         */
-                       res.redirect('https://localhost:9901/public/webform.html?prefill=false');
+                       //res.redirect('https://162.214.150.246/pages/webform.html?prefill=false');
+                       res.redirect('https://162.214.150.246/?prefill=false');
                     }
 
                     res.send({ data: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data});
