@@ -14,7 +14,8 @@ var tokenRequest = '<?xml version="1.0" encoding="utf-8"?>\
 </soap:Body>\
 </soap:Envelope>';
 
-async function addContacts (customerId, customerName, email, token, phone, mobile) {           
+async function addContacts (customerId, customerName, email, token, phone, mobile) {    
+    var response = '';       
     var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Cliente.asmx';
     var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
@@ -26,15 +27,15 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
     <soap:Body>\
         <AdicionarContacto xmlns="capgemini/crm/webservices/cliente">\
         <contacto>\
-            <Descricao>Contacto principal</Descricao>\
-            <Id>int</Id>\
-            <Nome>' + customerName + '</Nome>\
-            <IdCliente>' + customerId + '</IdCliente>\
+            <Descricao>string</Descricao>\
+            <Id>1</Id>\
+            <Nome>string</Nome>\
+            <IdCliente>' + req.query.id + '</IdCliente>\
             <IdCargo>4</IdCargo>\
-            <IdTitulo></IdTitulo>\
-            <Telefone>' + phone + '</Telefone>\
-            <Telemovel>' + mobile + '</Telemovel>\
-            <Email>' + email + '</Email>\
+            <IdTitulo>' + req.query.titulo + '</IdTitulo>\
+            <Telefone>' + req.query.phone + '</Telefone>\
+            <Telemovel>' + req.query.mobile + '</Telemovel>\
+            <Email>' + req.query.email + '</Email>\
             <Titulo></Titulo>\
             <Cargo>Utilizador</Cargo>\
             <Principal>true</Principal>\
@@ -42,7 +43,7 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
             <DataSync>' + new Date().toISOString() + '</DataSync>\
             <Total>1</Total>\
         </contacto>\
-        <userid>int</userid>\
+        <userid>82</userid>\
         </AdicionarContacto>\
     </soap:Body>\
     </soap:Envelope>';
@@ -52,8 +53,7 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
             {'Content-Type': 'text/xml'}
         }
     ).then(userResponse => {
-        console.log(userResponse.data);
-        
+        //console.log(userResponse.data);
         var xmlResult = userResponse.data;
 
         parser.parseString(xmlResult, (err, result) => {
@@ -61,19 +61,22 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
                 console.error('Error parsing XML:', err);
                 return;
             }
-
-            res.send({ id: result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"]});
-            //return result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"];
+            response = result['soap:Envelope']['soap:Body'];
+            res.send({ data: result['soap:Envelope']['soap:Body']/*,
+                contact: addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile)*/
+            });
         })
 
+        return response;
     }).catch(userError => {
-        console.log(userError.data);
-        /*
+        console.log('\nError: \n' + userError);
         res.send({
             code: userError.code,
             status: userError.response.status,
             data: userError.response.data
-        })*/
+        });
+
+        return userError.code;
     })
 }
 
@@ -460,8 +463,6 @@ exports.addAddress = async function (req, res) {
             </soap:Body>\
             </soap:Envelope>';
 
-            console.log('Request: \n' + userRequest);
-
             axios.post(userUrl, userRequest, {
                 headers:
                     {'Content-Type': 'text/xml'}
@@ -482,12 +483,12 @@ exports.addAddress = async function (req, res) {
 
             }).catch(userError => {
                 console.log('Second Call Error: ' + userError);
-                /*
+                
                 res.send({
                     code: userError.code,
                     status: userError.response.status,
                     data: userError.response.data
-                })*/
+                })
             })
         });
     }).catch(error => {
