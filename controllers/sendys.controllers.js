@@ -29,13 +29,13 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
         <contacto>\
             <Descricao>string</Descricao>\
             <Id>1</Id>\
-            <Nome>string</Nome>\
-            <IdCliente>' + req.query.id + '</IdCliente>\
+            <Nome>' + customerName + '</Nome>\
+            <IdCliente>' + customerId + '</IdCliente>\
             <IdCargo>4</IdCargo>\
-            <IdTitulo>' + req.query.titulo + '</IdTitulo>\
-            <Telefone>' + req.query.phone + '</Telefone>\
-            <Telemovel>' + req.query.mobile + '</Telemovel>\
-            <Email>' + req.query.email + '</Email>\
+            <IdTitulo>1</IdTitulo>\
+            <Telefone>' + phone + '</Telefone>\
+            <Telemovel>' + mobile + '</Telemovel>\
+            <Email>' + email + '</Email>\
             <Titulo></Titulo>\
             <Cargo>Utilizador</Cargo>\
             <Principal>true</Principal>\
@@ -63,19 +63,20 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
             }
 
             response = result['soap:Envelope']['soap:Body'];
-            res.send({ data: result['soap:Envelope']['soap:Body']});
+            //res.send({ data: result['soap:Envelope']['soap:Body']});
         })
 
         console.log('Response: \n' + response);
         return response;
     }).catch(userError => {
         console.log('\nError: \n' + userError);
+        /*
         res.send({
             code: userError.code,
             status: userError.response.status,
             data: userError.response.data
         });
-
+        */
         return userError.code;
     })
 }
@@ -122,7 +123,7 @@ async function addAddress(tokenString, customerNumber, fullAddress, location) {
             }
 
             response = result['soap:Envelope']['soap:Body'];
-            res.send({ data: result['soap:Envelope']['soap:Body']/*["AdicionarContactoResponse "]["AdicionarContactoResult"]*/});
+            //res.send({ data: result['soap:Envelope']['soap:Body']/*["AdicionarContactoResponse "]["AdicionarContactoResult"]*/});
             //return result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"];
         });
 
@@ -130,13 +131,13 @@ async function addAddress(tokenString, customerNumber, fullAddress, location) {
         return response;
     }).catch(userError => {
         console.log('Second Call Error: ' + userError);
-        
+        /*
         res.send({
             code: userError.code,
             status: userError.response.status,
             data: userError.response.data
         });
-
+        */
         return userError.code;
     })
 
