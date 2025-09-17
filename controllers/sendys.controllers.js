@@ -211,18 +211,24 @@ exports.getCustomer = async function (req, res) {
                             email: /*user.email*/result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data.Email,
                             // ... include other fields
                         });
+                        /*
                         res.json({
                             status: 'success',
                             userExists: true,
                             formUrl: `https://localhost:9901/public/webform.html?${params}`
                         });
+                        */
+                       res.redirect(`https://localhost:9901/public/webform.html?${params}`);
                         } else {
                         // New user - return URL for empty form
+                        /*
                         res.json({
                             status: 'success',
                             userExists: false,
                             formUrl: 'https://localhost:9901/public/webform.html?prefill=false'
                         });
+                        */
+                       res.redirect('https://localhost:9901/public/webform.html?prefill=false');
                     }
 
                     res.send({ data: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data});
