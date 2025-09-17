@@ -63,20 +63,12 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
             }
 
             response = result['soap:Envelope']['soap:Body'];
-            //res.send({ data: result['soap:Envelope']['soap:Body']});
         })
 
-        console.log('Response: \n' + response);
-        return response;
+        console.log('Contact Response: \n' + response['AdicionarContactoResponse']['AdicionarContactoResult']);
+        return responseresponse['AdicionarContactoResponse']['AdicionarContactoResult'];
     }).catch(userError => {
         console.log('\nError: \n' + userError);
-        /*
-        res.send({
-            code: userError.code,
-            status: userError.response.status,
-            data: userError.response.data
-        });
-        */
         return userError.code;
     })
 }
@@ -123,21 +115,12 @@ async function addAddress(tokenString, customerNumber, fullAddress, location) {
             }
 
             response = result['soap:Envelope']['soap:Body'];
-            //res.send({ data: result['soap:Envelope']['soap:Body']/*["AdicionarContactoResponse "]["AdicionarContactoResult"]*/});
-            //return result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"];
         });
 
-        console.log('Response: \n' + response);
-        return response;
+        console.log('Address Response: \n' + response['AdicionarMoradaResponse']['AdicionarMoradaResult']);
+        return response['AdicionarMoradaResponse']['AdicionarMoradaResult'];
     }).catch(userError => {
         console.log('Second Call Error: ' + userError);
-        /*
-        res.send({
-            code: userError.code,
-            status: userError.response.status,
-            data: userError.response.data
-        });
-        */
         return userError.code;
     })
 
