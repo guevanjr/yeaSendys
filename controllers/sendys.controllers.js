@@ -61,12 +61,12 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
                 console.error('Error parsing XML:', err);
                 return;
             }
+
             response = result['soap:Envelope']['soap:Body'];
-            res.send({ data: result['soap:Envelope']['soap:Body']/*,
-                contact: addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile)*/
-            });
+            res.send({ data: result['soap:Envelope']['soap:Body']});
         })
 
+        console.log('Response: \n' + response);
         return response;
     }).catch(userError => {
         console.log('\nError: \n' + userError);
@@ -78,6 +78,68 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
 
         return userError.code;
     })
+}
+
+async function addAddress(tokenString, customerNumber, fullAddress, location) {
+    var response = '';    
+    var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Cliente.asmx';
+    var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
+    <soap:Header>\
+        <AuthenticationHeader xmlns="capgemini/crm/webservices/cliente">\
+        <TokenId>' + tokenString + '</TokenId>\
+        </AuthenticationHeader>\
+    </soap:Header>\
+    <soap:Body>\
+        <AdicionarMorada xmlns="capgemini/crm/webservices/cliente">\
+        <morada>\
+            <Id>1</Id>\
+            <IdCliente>' + customerNumber + '</IdCliente>\
+            <Morada>' + fullAddress + '</Morada>\
+            <Distancia>1</Distancia>\
+            <Localidade>' + location + '</Localidade>\
+            <CodigoPostal></CodigoPostal>\
+            <Descricao></Descricao>\
+            <Principal>true</Principal>\
+        </morada>\
+        <userid>82</userid>\
+        </AdicionarMorada>\
+    </soap:Body>\
+    </soap:Envelope>';
+
+    axios.post(userUrl, userRequest, {
+        headers:
+            {'Content-Type': 'text/xml'}
+        }
+    ).then(userResponse => {
+        console.log(userResponse.data);
+        
+        var xmlResult = userResponse.data;
+        parser.parseString(xmlResult, (err, result) => {
+            if (err) {
+                console.error('Error parsing XML:', err);
+                return;
+            }
+
+            response = result['soap:Envelope']['soap:Body'];
+            res.send({ data: result['soap:Envelope']['soap:Body']/*["AdicionarContactoResponse "]["AdicionarContactoResult"]*/});
+            //return result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"];
+        });
+
+        console.log('Response: \n' + response);
+        return response;
+    }).catch(userError => {
+        console.log('Second Call Error: ' + userError);
+        
+        res.send({
+            code: userError.code,
+            status: userError.response.status,
+            data: userError.response.data
+        });
+
+        return userError.code;
+    })
+
 }
 
 /* === DONE === */
@@ -176,6 +238,15 @@ exports.getCustomer = async function (req, res) {
 
 /* ==== DONE ==== */
 exports.insertCustomer = async function (req, res) {
+    var firstname = req.query.firstname;
+    var lastname = req.query.lastname;
+    var contactname = req.query.contactname;
+    var email = req.query.email;
+    var phone = req.query.phone;
+    var mobile = req.query.mobile;
+    var address = req.query.address;
+    var city = req.query.city;
+    
     axios.post(tokenUrl, tokenRequest, { 
         headers:
              {'Content-Type': 'text/xml'}
@@ -207,8 +278,8 @@ exports.insertCustomer = async function (req, res) {
                 <input>\
                     <IdFirma>1</IdFirma>\
                     <IdNumeracaoAutomatica>1</IdNumeracaoAutomatica>\
-                    <Nome>' + req.query.firstname + '</Nome>\
-                    <SegundoNome>' + req.query.lastname + '</SegundoNome>\
+                    <Nome>' + firstname + '</Nome>\
+                    <SegundoNome>' + lastname + '</SegundoNome>\
                     <Numero>1</Numero>\
                     <IdDistribuidor>1</IdDistribuidor>\
                     <Descricao></Descricao>\
@@ -251,10 +322,9 @@ exports.insertCustomer = async function (req, res) {
                     }
 
                     var customerId = result['soap:Envelope']['soap:Body']["InsertResponse"]["InsertResult"]["Id"][0];
-                    //addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile);
-                    //addContacts (customerId, customerName, email, token, phone, mobile);
                     res.send({ data: result['soap:Envelope']['soap:Body'],
-                        contact: addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile)
+                        contact: addContacts(customerId, contactname, email, token, phone, mobile),
+                        address: addAddress(token , customerId, address, city)
                     });
                 })
 
@@ -329,7 +399,7 @@ exports.getUser = async function (req, res) {
         console.log(error);
     })
 }
-*/
+
 
 exports.addContacts = async function (req, res) {
     axios.post(tokenUrl, tokenRequest, { 
@@ -396,11 +466,7 @@ exports.addContacts = async function (req, res) {
                         return;
                     }
 
-                    //var customerId = result['soap:Envelope']['soap:Body']["InsertResponse"]["InsertResult"]["Id"][0];
-                    //addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile);
-                    //addContacts (customerId, customerName, email, token, phone, mobile);
-                    res.send({ data: result['soap:Envelope']['soap:Body']/*,
-                        contact: addContacts(customerId, req.query.name, req.query.email, token, req.query.phone, req.query.mobile)*/
+                    res.send({ data: result['soap:Envelope']['soap:Body']
                     });
                 })
 
@@ -477,8 +543,7 @@ exports.addAddress = async function (req, res) {
                         return;
                     }
 
-                    res.send({ data: result['soap:Envelope']['soap:Body']/*["AdicionarContactoResponse "]["AdicionarContactoResult"]*/});
-                    //return result['soap:Envelope']['soap:Body']["AdicionarContactoResponse "]["AdicionarContactoResult"];
+                    res.send({ data: result['soap:Envelope']['soap:Body']});
                 })
 
             }).catch(userError => {
@@ -495,6 +560,7 @@ exports.addAddress = async function (req, res) {
         console.log('First Call Error: ' + error);
     })
 }
+*/
 
 /* === DONE === */
 exports.addTasks = async function (req, res) {
