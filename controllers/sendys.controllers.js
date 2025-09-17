@@ -66,7 +66,7 @@ async function addContacts (customerId, customerName, email, token, phone, mobil
         })
 
         console.log('Contact Response: \n' + response['AdicionarContactoResponse']['AdicionarContactoResult']);
-        return responseresponse['AdicionarContactoResponse']['AdicionarContactoResult'];
+        return response['AdicionarContactoResponse']['AdicionarContactoResult'];
     }).catch(userError => {
         console.log('\nError: \n' + userError);
         return userError.code;
