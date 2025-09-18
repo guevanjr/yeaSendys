@@ -218,10 +218,11 @@ exports.getCustomer = async function (req, res) {
                         res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});
                     } else {
                        // New user - return URL for empty form
-                       res.json({ contactUrl: 'http://162.214.150.246/?prefill=false' });
+                       res.json({ data: data, contactUrl: 'http://162.214.150.246/?prefill=false' });
                     }
                 })
 
+                //res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});
             }).catch(userError => {
                 console.log('\nError: \n' + userError);
                 
