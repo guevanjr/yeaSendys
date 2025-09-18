@@ -497,7 +497,8 @@ exports.addCallDetails = async function (req, res) {
                     {'Content-Type': 'text/xml'}
                 }
             ).then(userResponse => {
-                console.log(userResponse.data);
+                //console.log(userResponse.data);
+                res.json({ data: result['soap:Envelope']['soap:Body'] })
             }).catch(userError => {
                 //console.log(userError.code);
                 res.send({
