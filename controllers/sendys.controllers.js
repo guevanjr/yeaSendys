@@ -204,7 +204,7 @@ exports.getCustomer = async function (req, res) {
                     // Check if user exists in database
                     if (result) {
                         // User exists - return URL with pre-filled data
-                        var data = result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'][0];
+                        var data = result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'];
                         console.log('Call Result: ' + data/*result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'][0]*/);
                         res.send({ data: data /*result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.*/ });
                         /*
