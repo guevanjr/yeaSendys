@@ -218,6 +218,7 @@ exports.getCustomer = async function (req, res) {
 
                         //res.redirect(`https://162.214.150.246/pages/webform.html?${params}`);
                        //res.redirect(`https://162.214.150.246/?${params}`);
+                       /*
                        res.send({ data: {
                             id: data.IdCliente,
                             name: data.NomeCliente,
@@ -225,7 +226,8 @@ exports.getCustomer = async function (req, res) {
                             phone: data.Telefone,
                             mobile: data.Telemovel,
                             contactUrl:`https://162.214.150.246/?${params}`
-                       }})
+                       }});*/
+                       res.json({ data: data });
                     } else {
                        // New user - return URL for empty form
                        //res.redirect('https://162.214.150.246/pages/webform.html?prefill=false');
