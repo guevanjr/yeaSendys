@@ -209,6 +209,8 @@ exports.getCustomer = async function (req, res) {
                             userId: /*user.id*/result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data.IdCliente,
                             name: /*user.name*/result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data.NomeCliente,
                             email: /*user.email*/result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data.Email,
+                            phone: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data.Telefone,
+                            mobile: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data.Telemovel
                             // ... include other fields
                         });
                         /*
@@ -233,7 +235,7 @@ exports.getCustomer = async function (req, res) {
                        res.redirect('https://162.214.150.246/?prefill=false');
                     }
 
-                    res.send({ data: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data});
+                    //res.send({ data: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data});
                 })
 
             }).catch(userError => {
@@ -438,6 +440,8 @@ exports.addTasks = async function (req, res) {
 }
 
 exports.addCallDetails = async function (req, res) {
+    console.log(req.body);
+    
     axios.post(tokenUrl, tokenRequest, { 
         headers:
              {'Content-Type': 'text/xml'}
