@@ -221,8 +221,6 @@ exports.getCustomer = async function (req, res) {
                        res.json({ data: data, contactUrl: 'http://162.214.150.246/?prefill=false' });
                     }
                 })
-
-                //res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});
             }).catch(userError => {
                 console.log('\nError: \n' + userError);
                 
@@ -463,8 +461,8 @@ exports.addCallDetails = async function (req, res) {
                     <IdCliente>' + req.query.customerId + '</IdCliente>\
                     <IdUtilizador>82</IdUtilizador>' +
                     //<IdBolsaContacto>1</IdBolsaContacto>\
-                    '<IdContactoOrigem>' + req.query.phone + '</IdContactoOrigem>\
-                    <IdTipoContacto>' + tipoChamada + '</IdTipoContacto>\
+                    //<IdContactoOrigem>' + req.query.phone + '</IdContactoOrigem>\
+                    '<IdTipoContacto>' + tipoChamada + '</IdTipoContacto>\
                     <IdAreaRelacionada>7</IdAreaRelacionada>' +
                     //<IdContrato>1</IdContrato>\
                     '<IdEstadoContacto>' + callStatus + '</IdEstadoContacto>\
