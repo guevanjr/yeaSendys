@@ -243,10 +243,11 @@ exports.getCustomer = async function (req, res) {
 
             }).catch(userError => {
                 console.log('\nError: \n' + userError);
+                
                 res.send({
                     code: userError.code,
-                    status: userError.response.status,
-                    data: userError.response.data
+                    status: userError.status,
+                    data: userError.data
                 })
             })
         });
