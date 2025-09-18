@@ -224,7 +224,7 @@ exports.getCustomer = async function (req, res) {
                         });
                         */
                        //res.redirect(`https://162.214.150.246/pages/webform.html?${params}`);
-                       res.redirect(`https://162.214.150.246/?${params}`);
+                       //res.redirect(`https://162.214.150.246/?${params}`);
                         } else {
                         // New user - return URL for empty form
                         /*
