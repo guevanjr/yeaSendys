@@ -497,7 +497,7 @@ exports.addCallDetails = async function (req, res) {
                     <string></string>\
                     <string></string>\
                     </AttachmentsName>\
-                    <FileId></FileId>\
+                    <FileId>1</FileId>\
                     <FileName></FileName>\
                 </input>\
                 </Insert>\
