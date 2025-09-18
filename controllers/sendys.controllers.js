@@ -205,19 +205,19 @@ exports.getCustomer = async function (req, res) {
                     if (result) {
                         // User exists - return URL with pre-filled data
                         var data = result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'].IdCliente;
-                        console.log('Call Result: ' + data/*result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'][0]*/);
-                        res.send({ data: data /*result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.*/ });
-                        /*
+                        //console.log('Call Result: ' + data/*result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'][0]*/);
+                        //res.send({ data: data /*result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.*/ });
+                        
                         const params = new URLSearchParams({
                             prefill: 'true',
-                            userId: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data.IdCliente,
-                            name: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data.NomeCliente,
-                            email: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data.Email,
-                            phone: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data.Telefone,
-                            mobile: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data.Telemovel
+                            userId: data.IdCliente,
+                            name: data.NomeCliente,
+                            email: data.Email,
+                            phone: data.Telefone,
+                            mobile: data.Telemovel
                             // ... include other fields
                         });
-                        */
+                        
                         /*
                         res.json({
                             status: 'success',
@@ -226,7 +226,7 @@ exports.getCustomer = async function (req, res) {
                         });
                         */
                        //res.redirect(`https://162.214.150.246/pages/webform.html?${params}`);
-                       //res.redirect(`https://162.214.150.246/?${params}`);
+                       res.redirect(`https://162.214.150.246/?${params}`);
                         } else {
                         // New user - return URL for empty form
                         /*
