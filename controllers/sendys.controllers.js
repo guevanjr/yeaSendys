@@ -204,7 +204,8 @@ exports.getCustomer = async function (req, res) {
                     console.log('Call Result: ' + data);
 
                     // Check if user exists in database
-                    if (data) {                       
+                    if (data) {   
+                                          
                         const params = new URLSearchParams({
                             prefill: 'true',
                             userId: data.IdCliente,
@@ -216,7 +217,15 @@ exports.getCustomer = async function (req, res) {
                         });
 
                         //res.redirect(`https://162.214.150.246/pages/webform.html?${params}`);
-                       res.redirect(`https://162.214.150.246/?${params}`);
+                       //res.redirect(`https://162.214.150.246/?${params}`);
+                       res.send({ data: {
+                            id: data.IdCliente,
+                            name: data.NomeCliente,
+                            email: data.Email,
+                            phone: data.Telefone,
+                            mobile: data.Telemovel,
+                            contactUrl:`https://162.214.150.246/?${params}`
+                       }})
                     } else {
                        // New user - return URL for empty form
                        //res.redirect('https://162.214.150.246/pages/webform.html?prefill=false');
