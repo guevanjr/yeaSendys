@@ -436,7 +436,10 @@ exports.addTasks = async function (req, res) {
 }
 
 exports.addCallDetails = async function (req, res) {
-    console.log(req.body);
+    console.log('Request Details: ' + req.query);
+    var tipoChamada = (req.query.calldirection === "Inbound" ? 1 : 2);
+    var callStatus = (req.query.status === "OK" ? 2 : 3);
+    var description = 'Call was not recorded';
 
     axios.post(tokenUrl, tokenRequest, { 
         headers:
@@ -455,12 +458,12 @@ exports.addCallDetails = async function (req, res) {
             console.log('\nIs Granted: ' + isGranted);
             console.log('Token: ' + token);    
             
-            var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/AreaRelacionada.asmx';
+            var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Contacto.asmx';
             var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
             <soap:Header>\
                 <AuthenticationHeader xmlns="capgemini/crm/webservices/contacto">\
-                <TokenId>string</TokenId>\
+                <TokenId>' + token + '</TokenId>\
                 </AuthenticationHeader>\
             </soap:Header>\
             <soap:Body>\
@@ -469,33 +472,33 @@ exports.addCallDetails = async function (req, res) {
                     <IsHtml>false</IsHtml>\
                     <IdCliente>' + req.query.customerId + '</IdCliente>\
                     <IdUtilizador>82</IdUtilizador>\
-                    <IdBolsaContacto>int</IdBolsaContacto>\
-                    <IdContactoOrigem>int</IdContactoOrigem>\
-                    <IdTipoContacto>' + req.query.calldirection + '</IdTipoContacto>\
-                    <IdAreaRelacionada>int</IdAreaRelacionada>\
-                    <IdContrato>int</IdContrato>\
-                    <IdEstadoContacto>int</IdEstadoContacto>\
-                    <IdEstadoAprovacao>int</IdEstadoAprovacao>\
-                    <IdContactoNoCliente>int</IdContactoNoCliente>\
+                    <IdBolsaContacto>1</IdBolsaContacto>\
+                    <IdContactoOrigem>' + req.query.phone + '</IdContactoOrigem>\
+                    <IdTipoContacto>' + tipoChamada + '</IdTipoContacto>\
+                    <IdAreaRelacionada>7</IdAreaRelacionada>\
+                    <IdContrato></IdContrato>\
+                    <IdEstadoContacto>' + callStatus + '</IdEstadoContacto>\
+                    <IdEstadoAprovacao>1</IdEstadoAprovacao>\
+                    <IdContactoNoCliente>' + req.query.contactId + '</IdContactoNoCliente>\
                     <ParaFacturar>false</ParaFacturar>\
-                    <IdEstadoFacturacao>int</IdEstadoFacturacao>\
-                    <Descricao>string</Descricao>\
-                    <Contacto>string</Contacto>\
+                    <IdEstadoFacturacao>3</IdEstadoFacturacao>\
+                    <Descricao>' + description + '</Descricao>\
+                    <Contacto>' + req.query.phone + '</Contacto>\
                     <Assunto>' + req.query.subject + '</Assunto>\
-                    <NumeroFactura>string</NumeroFactura>\
+                    <NumeroFactura></NumeroFactura>\
                     <HoraInicio>' + req.query.starttime + '</HoraInicio>\
                     <HoraFim>' + req.query.endtime + '</HoraFim>\
                     <IdUtilizador_C>82</IdUtilizador_C>\
                     <Attachments>\
-                    <base64Binary>base64Binary</base64Binary>\
-                    <base64Binary>base64Binary</base64Binary>\
+                    <base64Binary></base64Binary>\
+                    <base64Binary></base64Binary>\
                     </Attachments>\
                     <AttachmentsName>\
-                    <string>string</string>\
-                    <string>string</string>\
+                    <string></string>\
+                    <string></string>\
                     </AttachmentsName>\
-                    <FileId>int</FileId>\
-                    <FileName>string</FileName>\
+                    <FileId></FileId>\
+                    <FileName></FileName>\
                 </input>\
                 </Insert>\
             </soap:Body>\
