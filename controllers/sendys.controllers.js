@@ -227,11 +227,11 @@ exports.getCustomer = async function (req, res) {
                             mobile: data.Telemovel,
                             contactUrl:`https://162.214.150.246/?${params}`
                        }});*/
-                       res.json({ data: data });
+                       res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});
                     } else {
                        // New user - return URL for empty form
                        //res.redirect('https://162.214.150.246/pages/webform.html?prefill=false');
-                       res.redirect('https://162.214.150.246/?prefill=false');
+                       res.json({ contactUrl: 'https://162.214.150.246/?prefill=false' });
                     }
                 })
 
@@ -477,9 +477,9 @@ exports.addCallDetails = async function (req, res) {
                     <IdBolsaContacto>1</IdBolsaContacto>\
                     <IdContactoOrigem>' + req.query.phone + '</IdContactoOrigem>\
                     <IdTipoContacto>' + tipoChamada + '</IdTipoContacto>\
-                    <IdAreaRelacionada>7</IdAreaRelacionada>\
-                    <IdContrato>1</IdContrato>\
-                    <IdEstadoContacto>' + callStatus + '</IdEstadoContacto>\
+                    <IdAreaRelacionada>7</IdAreaRelacionada>' +
+                    //<IdContrato>1</IdContrato>\
+                    '<IdEstadoContacto>' + callStatus + '</IdEstadoContacto>\
                     <IdEstadoAprovacao>1</IdEstadoAprovacao>\
                     <IdContactoNoCliente>' + req.query.contactId + '</IdContactoNoCliente>\
                     <ParaFacturar>false</ParaFacturar>\
