@@ -486,8 +486,8 @@ exports.addCallDetails = async function (req, res) {
                     <Contacto>' + req.query.phone + '</Contacto>\
                     <Assunto>' + req.query.subject + '</Assunto>\
                     <NumeroFactura></NumeroFactura>\
-                    <HoraInicio>' + new Date(req.query.starttime).getTime().toISOString() + '</HoraInicio>\
-                    <HoraFim>' + new Date(req.query.endtime).getTime().toISOString()  + '</HoraFim>\
+                    <HoraInicio>' + new Date(req.query.starttime).getTime() + '</HoraInicio>\
+                    <HoraFim>' + new Date(req.query.endtime).getTime()  + '</HoraFim>\
                     <IdUtilizador_C>82</IdUtilizador_C>\
                     <Attachments>\
                     <base64Binary></base64Binary>\
