@@ -200,14 +200,11 @@ exports.getCustomer = async function (req, res) {
                         return;
                     }
 
+                    var data = result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'];
+                    console.log('Call Result: ' + data);
 
                     // Check if user exists in database
-                    if (result) {
-                        // User exists - return URL with pre-filled data
-                        var data = result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'].IdCliente;
-                        //console.log('Call Result: ' + data/*result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'][0]*/);
-                        //res.send({ data: data /*result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.*/ });
-                        
+                    if (data) {                       
                         const params = new URLSearchParams({
                             prefill: 'true',
                             userId: data.IdCliente,
@@ -217,30 +214,14 @@ exports.getCustomer = async function (req, res) {
                             mobile: data.Telemovel
                             // ... include other fields
                         });
-                        
-                        /*
-                        res.json({
-                            status: 'success',
-                            userExists: true,
-                            formUrl: `https://localhost:9901/public/webform.html?${params}`
-                        });
-                        */
-                       //res.redirect(`https://162.214.150.246/pages/webform.html?${params}`);
+
+                        //res.redirect(`https://162.214.150.246/pages/webform.html?${params}`);
                        res.redirect(`https://162.214.150.246/?${params}`);
-                        } else {
-                        // New user - return URL for empty form
-                        /*
-                        res.json({
-                            status: 'success',
-                            userExists: false,
-                            formUrl: 'https://localhost:9901/public/webform.html?prefill=false'
-                        });
-                        */
+                    } else {
+                       // New user - return URL for empty form
                        //res.redirect('https://162.214.150.246/pages/webform.html?prefill=false');
                        res.redirect('https://162.214.150.246/?prefill=false');
                     }
-
-                    //res.send({ data: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data});
                 })
 
             }).catch(userError => {
