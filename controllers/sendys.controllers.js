@@ -191,7 +191,7 @@ exports.getCustomer = async function (req, res) {
                     {'Content-Type': 'text/xml'}
                 }
             ).then(userResponse => {
-                console.log(userResponse.data);
+                //console.log(userResponse.data);
                 var xmlResult = userResponse.data;
 
                 parser.parseString(xmlResult, (err, result) => {
@@ -204,6 +204,7 @@ exports.getCustomer = async function (req, res) {
                     // Check if user exists in database
                     if (result) {
                         // User exists - return URL with pre-filled data
+                        console.log('Call Result: ' + result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data);
                         res.send({ data: result['soap:Envelope']['soap:Body'].QueryByPhoneResponse.QueryByPhoneResult.ContactosNoCliente.ContactoNoCliente_Data });
                         /*
                         const params = new URLSearchParams({
