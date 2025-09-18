@@ -473,9 +473,9 @@ exports.addCallDetails = async function (req, res) {
                 <input>\
                     <IsHtml>false</IsHtml>\
                     <IdCliente>' + req.query.customerId + '</IdCliente>\
-                    <IdUtilizador>82</IdUtilizador>\
-                    <IdBolsaContacto>1</IdBolsaContacto>\
-                    <IdContactoOrigem>' + req.query.phone + '</IdContactoOrigem>\
+                    <IdUtilizador>82</IdUtilizador>' +
+                    //<IdBolsaContacto>1</IdBolsaContacto>\
+                    '<IdContactoOrigem>' + req.query.phone + '</IdContactoOrigem>\
                     <IdTipoContacto>' + tipoChamada + '</IdTipoContacto>\
                     <IdAreaRelacionada>7</IdAreaRelacionada>' +
                     //<IdContrato>1</IdContrato>\
