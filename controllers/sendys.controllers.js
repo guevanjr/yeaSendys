@@ -436,7 +436,7 @@ exports.addTasks = async function (req, res) {
 }
 
 exports.addCallDetails = async function (req, res) {
-    console.log('Request Details: ' + req.query);
+    console.log('Request Details: ' + req);
     var tipoChamada = (req.query.calldirection === "Inbound" ? 1 : 2);
     var callStatus = (req.query.status === "OK" ? 2 : 3);
     var description = 'Call was not recorded';
