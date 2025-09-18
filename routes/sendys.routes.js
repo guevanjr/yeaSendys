@@ -10,8 +10,8 @@ const router = express.Router();
 router.get('/references', sendys.getReferenceData);
 //router.post('/address', sendys.addAddress);
 
-router.get('/customer', sendys.getCustomer);
-router.post('/customer/', sendys.insertCustomer);
+router.get('/customer/fetch', sendys.getCustomer);
+router.post('/customer/add', sendys.insertCustomer);
 
 router.post('/tasks', sendys.addTasks);
 router.post('/calls', sendys.addCallDetails);
