@@ -201,11 +201,13 @@ exports.getCustomer = async function (req, res) {
                     }
 
                     var data = result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'];
+                    var preFill = 'false';
                     console.log('Call Result: ' + data + '\n' + result['soap:Envelope']['soap:Body']);
 
                     // Check if user exists in database
                     if (data) {   
-                                          
+                        preFill = 'true';    
+                        /*              
                         const params = new URLSearchParams({
                             prefill: 'true',
                             userId: data.IdCliente,
@@ -216,10 +218,23 @@ exports.getCustomer = async function (req, res) {
                         });
 
                         res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});
-                    } else {
+                        */
+                    }/* else {
                        // New user - return URL for empty form
-                       res.json({ data: data, contactUrl: 'http://162.214.150.246/?prefill=false' });
-                    }
+                       preFill = 'false';
+                       //res.json({ data: data, contactUrl: 'http://162.214.150.246/?prefill=false' });
+                    }*/
+
+                    const params = new URLSearchParams({
+                        prefill: preFill,
+                        userId: data.IdCliente,
+                        name: data.NomeCliente,
+                        email: data.Email,
+                        phone: data.Telefone,
+                        mobile: data.Telemovel
+                    });
+
+                    res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});
                 })
             }).catch(userError => {
                 console.log('\nError: \n' + userError);
