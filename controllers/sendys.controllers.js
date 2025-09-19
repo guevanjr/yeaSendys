@@ -440,6 +440,11 @@ exports.addCallDetails = async function (req, res) {
     var callStatus = (req.query.status === "OK" ? 2 : 3);
     var description = req.query.description;
 
+    console.log('Status: ' + req.query.status + 
+        '\nDescription: ' + req.query.description +
+        '\nStart Time: ' + req.query.starttime + 
+        '\nEnd Time: ' + req.query.endttime);
+
     axios.post(tokenUrl, tokenRequest, { 
         headers:
              {'Content-Type': 'text/xml'}
@@ -452,10 +457,10 @@ exports.addCallDetails = async function (req, res) {
                 return;
             }
             // Accessing data within the envelope
-            var isGranted = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.AccessGranted;
+            //var isGranted = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.AccessGranted;
             var token = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.Token;
-            console.log('\nIs Granted: ' + isGranted);
-            console.log('Token: ' + token);    
+            //.log('\nIs Granted: ' + isGranted);
+            //console.log('Token: ' + token);    
             
             var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Contacto.asmx';
             var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
