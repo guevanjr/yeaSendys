@@ -435,9 +435,20 @@ exports.addTasks = async function (req, res) {
 }
 
 exports.addCallDetails = async function (req, res) {
+      const jsonSafeReq = {
+    method: req.method,
+    url: req.url,
+    headers: req.headers,
+    query: req.query,
+    params: req.params,
+    body: req.body
+  };
+  
+  console.log(JSON.stringify(jsonSafeReq, null, 2));
+  
     var pbxQuery = req.query;
     console.log(pbxQuery['data']);
-    
+
     var tipoChamada = (req.query.calldirection === "Inbound" ? 1 : 2);
     var callStatus = (req.query.status === "OK" ? 2 : 3);
     var description = req.query.description;
