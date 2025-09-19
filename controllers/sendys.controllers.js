@@ -435,12 +435,12 @@ exports.addTasks = async function (req, res) {
 }
 
 exports.addCallDetails = async function (req, res) {
-    console.log('Request Details: ' + req.data);
+    console.log('Request Details: ' + req.query);
     var tipoChamada = (req.query.calldirection === "Inbound" ? 1 : 2);
     var callStatus = (req.query.status === "OK" ? 2 : 3);
     var description = req.query.description;
-
-    console.log('Status: ' + req.data.status + 
+    console.log(description);
+    console.log('Status: ' + req.query.data.status + 
         '\nDescription: ' + req.data.description +
         '\nStart Time: ' + req.data.starttime + 
         '\nEnd Time: ' + req.data.endttime);
