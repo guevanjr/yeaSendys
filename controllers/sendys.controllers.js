@@ -207,6 +207,7 @@ exports.getCustomer = async function (req, res) {
                     // Check if user exists in database
                     if (data) {   
                         params = new URLSearchParams({
+                            status: 'success',
                             prefill: 'true',
                             userId: data.IdCliente,
                             name: data.NomeCliente,
@@ -219,6 +220,7 @@ exports.getCustomer = async function (req, res) {
                     } else {
                        // New user - return URL for empty form
                         params = new URLSearchParams({
+                            status: 'success',
                             prefill: 'false',
                             userId: null,
                             name: null,
