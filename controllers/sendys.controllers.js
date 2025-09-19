@@ -438,7 +438,7 @@ exports.addCallDetails = async function (req, res) {
     console.log('Request Details: ' + req.data);
     var tipoChamada = (req.query.calldirection === "Inbound" ? 1 : 2);
     var callStatus = (req.query.status === "OK" ? 2 : 3);
-    var description = 'Call was not recorded';
+    var description = req.query.description;
 
     axios.post(tokenUrl, tokenRequest, { 
         headers:
@@ -508,10 +508,10 @@ exports.addCallDetails = async function (req, res) {
                     {'Content-Type': 'text/xml'}
                 }
             ).then(userResponse => {
-                console.log(userResponse.data);
+                console.log('Calls Journal not Logged: ' + userResponse.data);
                 res.json({ data: result['soap:Envelope']['soap:Body'] })
             }).catch(userError => {
-                console.log('Calls Error: ' + userError.code);
+                console.log('Calls Journal not Logged: ' + userError.code);
                 res.send({
                     code: userError.code,
                     status: userError.response.status,
