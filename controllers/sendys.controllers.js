@@ -215,7 +215,7 @@ exports.getCustomer = async function (req, res) {
                             mobile: data.Telemovel
                         });
 
-                        res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});                        
+                        res.status(200).json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});                        
                     } else {
                        // New user - return URL for empty form
                         params = new URLSearchParams({
@@ -227,7 +227,7 @@ exports.getCustomer = async function (req, res) {
                             mobile: null
                         });
 
-                        res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});                        
+                        res.status(200).json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});                        
                     }
                 })
             }).catch(userError => {
