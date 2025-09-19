@@ -435,16 +435,24 @@ exports.addTasks = async function (req, res) {
 }
 
 exports.addCallDetails = async function (req, res) {
+    const jsonSafeReq = {
+    method: req.method,
+    url: req.url,
+    headers: req.headers,
+    query: req.query,
+    params: req.params,
+    body: req.body
+  };
+  
+  console.log(JSON.stringify(jsonSafeReq, null, 2));
+
     var pbxQuery = req.body;
-    console.log(req.query);
+    console.log(pbxQuery['data']);
 
-    var tipoChamada = (pbxQuery['data']['calldirection'] === "Inbound" ? 1 : 2);
-    var callStatus = (pbxQuery['data']['status'] === "OK" ? 2 : 3);
-    var description = pbxQuery['data']['description'];
-    var startTime = pbxQuery['data']['starttime'];
-    var endTime = pbxQuery['data']['endtime'];
-
-    //console.log(description);
+    var tipoChamada = (req.query.calldirection === "Inbound" ? 1 : 2);
+    var callStatus = (req.query.status === "OK" ? 2 : 3);
+    var description = req.query.description;
+    console.log(description);
     console.log('Status: ' + pbxQuery['data']['status'] + 
         '\nDescription: ' + pbxQuery['data']['description'] +
         '\nStart Time: ' + pbxQuery['data']['starttime'] + 
@@ -495,8 +503,8 @@ exports.addCallDetails = async function (req, res) {
                     <Contacto>' + req.query.phone + '</Contacto>\
                     <Assunto>' + req.query.subject + '</Assunto>\
                     <NumeroFactura></NumeroFactura>\
-                    <HoraInicio>' + new Date(startTime).toISOString() + '</HoraInicio>\
-                    <HoraFim>' + new Date(endTime).toISOString()  + '</HoraFim>\
+                    <HoraInicio>' + new Date(req.query.starttime).toISOString() + '</HoraInicio>\
+                    <HoraFim>' + new Date(req.query.endtime).toISOString()  + '</HoraFim>\
                     <IdUtilizador_C>82</IdUtilizador_C>\
                     <Attachments>\
                     <base64Binary></base64Binary>\
