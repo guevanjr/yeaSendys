@@ -229,7 +229,8 @@ exports.getCustomer = async function (req, res) {
                             mobile: null
                         });
 
-                        res.status(200).json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});                        
+                        //res.status(200).json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});
+                        res.status(200).redirect(`http://162.214.150.246/?${params}`);                         
                     }
                 })
             }).catch(userError => {
