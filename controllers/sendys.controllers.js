@@ -445,8 +445,8 @@ exports.addCallDetails = async function (req, res) {
   };
   
   console.log(JSON.stringify(jsonSafeReq, null, 2));
-  
-    var pbxQuery = req.query;
+
+    var pbxQuery = req.body;
     console.log(pbxQuery['data']);
 
     var tipoChamada = (req.query.calldirection === "Inbound" ? 1 : 2);
