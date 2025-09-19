@@ -142,12 +142,12 @@ exports.getCustomer = async function (req, res) {
                 return;
             }
             // Accessing data within the envelope
-            var isGranted = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.AccessGranted;
+            //var isGranted = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.AccessGranted;
             var token = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.Token;
             var requestBody = '';
 
-            console.log('\nIs Granted: ' + isGranted);
-            console.log('Token: ' + token);    
+            //console.log('\nIs Granted: ' + isGranted);
+            //console.log('Token: ' + token);    
             console.log('Search Parameter: ' + searchParameter);
             console.log('Search Value: ' + searchValue);
 
@@ -202,12 +202,12 @@ exports.getCustomer = async function (req, res) {
 
                     var data = result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'];
                     var params = '';
-                    console.log('Call Result: ' + data + '\n' + result['soap:Envelope']['soap:Body']);
+                    //console.log('Call Result: ' + data + '\n' + result['soap:Envelope']['soap:Body']);
 
                     // Check if user exists in database
                     if (data) {   
                         params = new URLSearchParams({
-                            status: 'success',
+                            status: true,
                             prefill: 'true',
                             userId: data.IdCliente,
                             name: data.NomeCliente,
@@ -220,7 +220,7 @@ exports.getCustomer = async function (req, res) {
                     } else {
                        // New user - return URL for empty form
                         params = new URLSearchParams({
-                            status: 'success',
+                            status: true,
                             prefill: 'false',
                             userId: null,
                             name: null,
@@ -230,7 +230,8 @@ exports.getCustomer = async function (req, res) {
                         });
 
                         //res.status(200).json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});
-                        res.status(200).redirect(`http://162.214.150.246/?${params}`);                         
+                        console.log('Number not found ..., redirecting ...');
+                        res.redirect(`http://162.214.150.246/?${params}`);                         
                     }
                 })
             }).catch(userError => {
