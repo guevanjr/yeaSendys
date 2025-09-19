@@ -435,15 +435,17 @@ exports.addTasks = async function (req, res) {
 }
 
 exports.addCallDetails = async function (req, res) {
-    console.log(req.query.data);
+    var pbxQuery = req.query;
+    console.log(pbxQuery['data']);
+    
     var tipoChamada = (req.query.calldirection === "Inbound" ? 1 : 2);
     var callStatus = (req.query.status === "OK" ? 2 : 3);
     var description = req.query.description;
     console.log(description);
-    console.log('Status: ' + req.query.data.status + 
-        '\nDescription: ' + req.data.description +
-        '\nStart Time: ' + req.data.starttime + 
-        '\nEnd Time: ' + req.data.endttime);
+    console.log('Status: ' + pbxQuery['data']['status'] + 
+        '\nDescription: ' + pbxQuery['data']['description'] +
+        '\nStart Time: ' + pbxQuery['data']['starttime'] + 
+        '\nEnd Time: ' + pbxQuery['data']['endtime']);
 
     axios.post(tokenUrl, tokenRequest, { 
         headers:
