@@ -435,7 +435,7 @@ exports.addTasks = async function (req, res) {
 }
 
 exports.addCallDetails = async function (req, res) {
-    /*
+    
     const jsonSafeReq = {
     method: req.method,
     url: req.url,
@@ -446,7 +446,7 @@ exports.addCallDetails = async function (req, res) {
   };
   
   console.log(JSON.stringify(jsonSafeReq, null, 2));
-*/
+
     var pbxQuery = req.body;
     console.log(pbxQuery);
 
