@@ -201,14 +201,12 @@ exports.getCustomer = async function (req, res) {
                     }
 
                     var data = result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'];
-                    var preFill = 'false';
+                    var params = '';
                     console.log('Call Result: ' + data + '\n' + result['soap:Envelope']['soap:Body']);
 
                     // Check if user exists in database
                     if (data) {   
-                        preFill = 'true';    
-                        /*              
-                        const params = new URLSearchParams({
+                        params = new URLSearchParams({
                             prefill: 'true',
                             userId: data.IdCliente,
                             name: data.NomeCliente,
@@ -217,24 +215,20 @@ exports.getCustomer = async function (req, res) {
                             mobile: data.Telemovel
                         });
 
-                        res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});
-                        */
-                    }/* else {
+                        res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});                        
+                    } else {
                        // New user - return URL for empty form
-                       preFill = 'false';
-                       //res.json({ data: data, contactUrl: 'http://162.214.150.246/?prefill=false' });
-                    }*/
+                        params = new URLSearchParams({
+                            prefill: 'false',
+                            userId: null,
+                            name: null,
+                            email: null,
+                            phone: searchValue,
+                            mobile: null
+                        });
 
-                    const params = new URLSearchParams({
-                        prefill: preFill,
-                        userId: data.IdCliente,
-                        name: data.NomeCliente,
-                        email: data.Email,
-                        phone: data.Telefone,
-                        mobile: data.Telemovel
-                    });
-
-                    res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});
+                        res.json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});                        
+                    }
                 })
             }).catch(userError => {
                 console.log('\nError: \n' + userError);
