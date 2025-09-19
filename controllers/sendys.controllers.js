@@ -191,7 +191,6 @@ exports.getCustomer = async function (req, res) {
                     {'Content-Type': 'text/xml'}
                 }
             ).then(userResponse => {
-                //console.log(userResponse.data);
                 var xmlResult = userResponse.data;
 
                 parser.parseString(xmlResult, (err, result) => {
@@ -202,7 +201,6 @@ exports.getCustomer = async function (req, res) {
 
                     var data = result['soap:Envelope']['soap:Body']['QueryByPhoneResponse']['QueryByPhoneResult']['ContactosNoCliente']['ContactoNoCliente_Data'];
                     var params = '';
-                    //console.log('Call Result: ' + data + '\n' + result['soap:Envelope']['soap:Body']);
 
                     // Check if user exists in database
                     if (data) {   
@@ -216,7 +214,7 @@ exports.getCustomer = async function (req, res) {
                             mobile: data.Telemovel
                         });
 
-                        res.status(200).json({ data: data, contactUrl:  `http://162.214.150.246/?${params}`});                        
+                        res.status(200).json({ data: data, contactUrl: `http://162.214.150.246/?${params}`});                        
                     } else {
                        // New user - return URL for empty form
                         params = new URLSearchParams({

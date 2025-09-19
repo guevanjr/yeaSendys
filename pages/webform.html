@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Form Portal</title>
+    <title>Integração com CRM</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -243,17 +243,17 @@
     <div id="app">
         <div class="container">
             <header>
-                <h1><i class="fas fa-file-alt"></i> User Form Portal</h1>
-                <p>Form pre-filled based on URL parameters</p>
+                <h1><i class="fas fa-file-alt"></i> Formulário de Integração </h1>
+                <p>Os dados apresentados estão em conformidade com o CRM Sendys</p>
             </header>
             
             <div class="content">
                 <div class="url-info">
-                    <p><i class="fas fa-info-circle"></i> This form is being loaded with URL parameters: <code>{{ currentUrl }}</code></p>
+                    <p><i class="fas fa-info-circle"></i> Parâmetros de pesquisa usados : <code>{{ currentUrl }}</code></p>
                 </div>
                 
                 <div class="form-section">
-                    <h3><i class="fas fa-user"></i> Personal Information</h3>
+                    <h3><i class="fas fa-user"></i> Informação do Cliente </h3>
                     <div class="form-container">
                         <div class="form-group">
                             <label for="name">Nome do Contacto</label>
@@ -271,8 +271,8 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="phone">Telemóvel</label>
-                            <input type="tel" id="mobile" v-model="formData.phone" placeholder="Enter your phone number">
+                            <label for="mobile">Telemóvel</label>
+                            <input type="tel" id="mobile" v-model="formData.mobile" placeholder="Enter your mobile number">
                         </div>
 
                         <div class="form-group">
@@ -283,7 +283,7 @@
                 </div>
                 
                 <div class="form-section">
-                    <h3><i class="fas fa-credit-card"></i> Outras Informações</h3>
+                    <h3><i class="fas fa-credit-card"></i> Outras Informações </h3>
                     <div class="form-container">
                         <div class="form-group">
                             <label for="company">Nome da Empresa</label>
@@ -315,7 +315,7 @@
                 <div v-if="responseMessage" :class="['response-message', responseType]">
                     {{ responseMessage }}
                 </div>
-                
+<!--                
                 <div class="api-info">
                     <h3><i class="fas fa-link"></i> How to call this form from another application</h3>
                     <p>Your webapp can be called with URL parameters to pre-fill the form. Here are some examples:</p>
@@ -369,6 +369,7 @@
                         });
                     </div>
                 </div>
+            -->
             </div>
         </div>
     </div>
@@ -381,6 +382,7 @@
                     name: '',
                     email: '',
                     phone: '',
+                    mobile: '',
                     address: '',
                     company: '',
                     position: '',
@@ -403,6 +405,7 @@
                         this.formData.name = urlParams.get('name') || '';
                         this.formData.email = urlParams.get('email') || '';
                         this.formData.phone = urlParams.get('phone') || '';
+                        this.formData.mobile = urlParams.get('mobile') || '';
                         this.formData.address = urlParams.get('address') || '';
                         this.formData.company = urlParams.get('company') || '';
                         this.formData.position = urlParams.get('position') || '';
@@ -416,6 +419,7 @@
                             name: '',
                             email: '',
                             phone: '',
+                            mobile: '',
                             address: '',
                             company: '',
                             position: '',
@@ -442,6 +446,7 @@
                         name: '',
                         email: '',
                         phone: '',
+                        mobile: '',
                         address: '',
                         company: '',
                         position: '',
