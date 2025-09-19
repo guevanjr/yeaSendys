@@ -435,15 +435,15 @@ exports.addTasks = async function (req, res) {
 }
 
 exports.addCallDetails = async function (req, res) {
-    console.log('Request Details: ' + req.body);
-    var tipoChamada = (req.body.calldirection === "Inbound" ? 1 : 2);
-    var callStatus = (req.body.status === "OK" ? 2 : 3);
-    var description = req.body.description;
+    console.log('Request Details: ' + JSON.parse(req));
+    var tipoChamada = (req.query.calldirection === "Inbound" ? 1 : 2);
+    var callStatus = (req.query.status === "OK" ? 2 : 3);
+    var description = req.query.description;
 
-    console.log('Status: ' + req.body.status + 
-        '\nDescription: ' + req.body.description +
-        '\nStart Time: ' + req.body.starttime + 
-        '\nEnd Time: ' + req.body.endttime);
+    console.log('Status: ' + req.query.status + 
+        '\nDescription: ' + req.query.description +
+        '\nStart Time: ' + req.query.starttime + 
+        '\nEnd Time: ' + req.query.endttime);
 
     axios.post(tokenUrl, tokenRequest, { 
         headers:
@@ -474,7 +474,7 @@ exports.addCallDetails = async function (req, res) {
                 <Insert xmlns="capgemini/crm/webservices/contacto">\
                 <input>\
                     <IsHtml>false</IsHtml>\
-                    <IdCliente>' + req.body.customerId + '</IdCliente>\
+                    <IdCliente>' + req.query.customerId + '</IdCliente>\
                     <IdUtilizador>82</IdUtilizador>' +
                     //<IdBolsaContacto>1</IdBolsaContacto>\
                     //<IdContactoOrigem>' + req.query.phone + '</IdContactoOrigem>\
@@ -483,15 +483,15 @@ exports.addCallDetails = async function (req, res) {
                     //<IdContrato>1</IdContrato>\
                     '<IdEstadoContacto>' + callStatus + '</IdEstadoContacto>\
                     <IdEstadoAprovacao>1</IdEstadoAprovacao>\
-                    <IdContactoNoCliente>' + req.body.contactId + '</IdContactoNoCliente>\
+                    <IdContactoNoCliente>' + req.query.contactId + '</IdContactoNoCliente>\
                     <ParaFacturar>false</ParaFacturar>\
                     <IdEstadoFacturacao>3</IdEstadoFacturacao>\
                     <Descricao>' + description + '</Descricao>\
-                    <Contacto>' + req.body.phone + '</Contacto>\
-                    <Assunto>' + req.body.subject + '</Assunto>\
+                    <Contacto>' + req.query.phone + '</Contacto>\
+                    <Assunto>' + req.query.subject + '</Assunto>\
                     <NumeroFactura></NumeroFactura>\
-                    <HoraInicio>' + new Date(req.body.starttime).toISOString() + '</HoraInicio>\
-                    <HoraFim>' + new Date(req.body.endtime).toISOString()  + '</HoraFim>\
+                    <HoraInicio>' + new Date(req.query.starttime).toISOString() + '</HoraInicio>\
+                    <HoraFim>' + new Date(req.query.endtime).toISOString()  + '</HoraFim>\
                     <IdUtilizador_C>82</IdUtilizador_C>\
                     <Attachments>\
                     <base64Binary></base64Binary>\
