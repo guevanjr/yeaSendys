@@ -445,7 +445,12 @@ exports.addCallDetails = async function (req, res) {
         '\nStart Time: ' + pbxQuery.starttime+ 
         '\nEnd Time: ' + pbxQuery.endtime);
 
-    axios.get('162.214.149.184:7225/sendysApi/customer/fetch?parameter=PHONE&value=' + phone) 
+    axios.get('162.214.149.184:7225/sendysApi/customer/fetch', {
+        params: {
+            parameter: 'PHONE',
+            value: phone
+        }
+    }) 
     .then(getResponse => {
         var customers = getResponse.data;
         var customerId = customers.IdCliente;
