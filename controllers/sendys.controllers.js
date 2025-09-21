@@ -142,12 +142,9 @@ exports.getCustomer = async function (req, res) {
                 return;
             }
             // Accessing data within the envelope
-            //var isGranted = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.AccessGranted;
             var token = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.Token;
             var requestBody = '';
 
-            //console.log('\nIs Granted: ' + isGranted);
-            //console.log('Token: ' + token);    
             console.log('Search Parameter: ' + searchParameter);
             console.log('Search Value: ' + searchValue);
 
@@ -435,96 +432,105 @@ exports.addTasks = async function (req, res) {
 }
 
 exports.addCallDetails = async function (req, res) {
-    var pbxQuery = req.body;
+    var pbxQuery = req.body.data[0];
     console.log(pbxQuery);
 
-    var tipoChamada = (pbxQuery['data'].calldirection === "Inbound Call" ? 1 : 2);
-    var callStatus = (pbxQuery['data'].status === "Completed" ? 2 : 3);
-    var description = pbxQuery['data'].description;
-    var phone = (tipoChamada === 1 ? pbxQuery['data'].from : pbxQuery['data'].to);
+    var tipoChamada = (pbxQuery.calldirection === "Inbound Call" ? 1 : 2);
+    var callStatus = (pbxQuery.status === "Completed" ? 2 : 3);
+    var description = pbxQuery.description;
+    var phone = (tipoChamada === 1 ? pbxQuery.from : pbxQuery.to);
 
-    //console.log(description);
-    console.log('Status: ' + pbxQuery['data'].status + 
-        '\nDescription: ' + pbxQuery['data'].description +
-        '\nStart Time: ' + pbxQuery['data'].starttime+ 
-        '\nEnd Time: ' + pbxQuery['data'].endtime);
-
-    axios.post(tokenUrl, tokenRequest, { 
-        headers:
-             {'Content-Type': 'text/xml'}
-        }
-    ).then(response => {
-        var xmlData = response.data;
-        parser.parseString(xmlData, (err, result) => {
-            if (err) {
-                console.error('Error parsing XML:', err);
-                return;
+    axios.get('162.214.149.184:7225/sendysApi/customer/fetch?parameter=PHONE&value=' + phone) 
+    .then(getResponse => {
+        var customers = getResponse.data;
+        var customerId = customers.IdCliente;
+        var contactId = customers.IdContactoNoCliente;
+        
+        axios.post(tokenUrl, tokenRequest, { 
+            headers:
+                {'Content-Type': 'text/xml'}
             }
-            // Accessing data within the envelope
-            var token = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.Token;
-            
-            var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Contacto.asmx';
-            var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
-            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
-            <soap:Header>\
-                <AuthenticationHeader xmlns="capgemini/crm/webservices/contacto">\
-                <TokenId>' + token + '</TokenId>\
-                </AuthenticationHeader>\
-            </soap:Header>\
-            <soap:Body>\
-                <Insert xmlns="capgemini/crm/webservices/contacto">\
-                <input>\
-                    <IsHtml>false</IsHtml>\
-                    <IdCliente>' + req.query.customerId + '</IdCliente>\
-                    <IdUtilizador>82</IdUtilizador>' +
-                    '<IdTipoContacto>' + tipoChamada + '</IdTipoContacto>\
-                    <IdAreaRelacionada>7</IdAreaRelacionada>' +
-                    '<IdEstadoContacto>' + callStatus + '</IdEstadoContacto>\
-                    <IdEstadoAprovacao>1</IdEstadoAprovacao>\
-                    <IdContactoNoCliente>' + req.query.contactId + '</IdContactoNoCliente>\
-                    <ParaFacturar>false</ParaFacturar>\
-                    <IdEstadoFacturacao>3</IdEstadoFacturacao>\
-                    <Descricao>' + description + '</Descricao>\
-                    <Contacto>' + phone + '</Contacto>\
-                    <Assunto>' + pbxQuery['data'].subject + '</Assunto>\
-                    <NumeroFactura></NumeroFactura>\
-                    <HoraInicio>' + pbxQuery['data'].starttime + '</HoraInicio>\
-                    <HoraFim>' + pbxQuery['data'].endtime  + '</HoraFim>\
-                    <IdUtilizador_C>82</IdUtilizador_C>\
-                    <Attachments>\
-                    <base64Binary></base64Binary>\
-                    <base64Binary></base64Binary>\
-                    </Attachments>\
-                    <AttachmentsName>\
-                    <string></string>\
-                    <string></string>\
-                    </AttachmentsName>\
-                    <FileId>1</FileId>\
-                    <FileName></FileName>\
-                </input>\
-                </Insert>\
-            </soap:Body>\
-            </soap:Envelope>';
-
-            axios.post(userUrl, userRequest, {
-                headers:
-                    {'Content-Type': 'text/xml'}
+        ).then(response => {
+            var xmlData = response.data;
+            parser.parseString(xmlData, (err, result) => {
+                if (err) {
+                    console.error('Error parsing XML:', err);
+                    return;
                 }
-            ).then(userResponse => {
-                console.log('Calls Journal not Logged: ' + userResponse.data);
-                res.json({ data: result['soap:Envelope']['soap:Body'] })
-            }).catch(userError => {
-                console.log('Calls Journal not Logged: ' + userError.code);
-                res.send({
-                    code: userError.code,
-                    status: userError.response.status,
-                    data: userError.response.data
+                // Accessing data within the envelope
+                var token = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.Token;
+                
+                var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Contacto.asmx';
+                var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
+                <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
+                <soap:Header>\
+                    <AuthenticationHeader xmlns="capgemini/crm/webservices/contacto">\
+                    <TokenId>' + token + '</TokenId>\
+                    </AuthenticationHeader>\
+                </soap:Header>\
+                <soap:Body>\
+                    <Insert xmlns="capgemini/crm/webservices/contacto">\
+                    <input>\
+                        <IsHtml>false</IsHtml>\
+                        <IdCliente>' + req.query.customerId + '</IdCliente>\
+                        <IdUtilizador>82</IdUtilizador>' +
+                        '<IdTipoContacto>' + tipoChamada + '</IdTipoContacto>\
+                        <IdAreaRelacionada>7</IdAreaRelacionada>' +
+                        '<IdEstadoContacto>' + callStatus + '</IdEstadoContacto>\
+                        <IdEstadoAprovacao>1</IdEstadoAprovacao>\
+                        <IdContactoNoCliente>' + req.query.contactId + '</IdContactoNoCliente>\
+                        <ParaFacturar>false</ParaFacturar>\
+                        <IdEstadoFacturacao>3</IdEstadoFacturacao>\
+                        <Descricao>' + description + '</Descricao>\
+                        <Contacto>' + phone + '</Contacto>\
+                        <Assunto>' + pbxQuery.subject + '</Assunto>\
+                        <NumeroFactura></NumeroFactura>\
+                        <HoraInicio>' + pbxQuery.starttime + '</HoraInicio>\
+                        <HoraFim>' + pbxQuery.endtime  + '</HoraFim>\
+                        <IdUtilizador_C>82</IdUtilizador_C>\
+                        <Attachments>\
+                        <base64Binary></base64Binary>\
+                        <base64Binary></base64Binary>\
+                        </Attachments>\
+                        <AttachmentsName>\
+                        <string></string>\
+                        <string></string>\
+                        </AttachmentsName>\
+                        <FileId>1</FileId>\
+                        <FileName></FileName>\
+                    </input>\
+                    </Insert>\
+                </soap:Body>\
+                </soap:Envelope>';
+
+                axios.post(userUrl, userRequest, {
+                    headers:
+                        {'Content-Type': 'text/xml'}
+                    }
+                ).then(userResponse => {
+                    console.log('Calls Journal not Logged: ' + userResponse.data);
+                    res.json({ data: result['soap:Envelope']['soap:Body'] })
+                }).catch(userError => {
+                    console.log('Calls Journal not Logged: ' + userError.code);
+                    res.send({
+                        code: userError.code,
+                        status: userError.response.status,
+                        data: userError.response.data
+                    })
                 })
-            })
-        });
-    }).catch(error => {
-        console.log(error);
+            });
+        }).catch(error => {
+            console.log(error);
+        })
+    }).catch(getError => {
+
     })
+    //console.log(description);
+    console.log('Status: ' + pbxQuery.status + 
+        '\nDescription: ' + pbxQuery.description +
+        '\nStart Time: ' + pbxQuery.starttime+ 
+        '\nEnd Time: ' + pbxQuery.endtime);
+
 }
 
 exports.getReferenceData = async function (req, res) {
