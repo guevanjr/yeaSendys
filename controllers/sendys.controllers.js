@@ -440,18 +440,27 @@ exports.addCallDetails = async function (req, res) {
     var description = pbxQuery.description;
     var phone = (tipoChamada === 1 ? pbxQuery.from : pbxQuery.to);
 
+    console.log('Status: ' + pbxQuery.status + 
+        '\nDescription: ' + pbxQuery.description +
+        '\nStart Time: ' + pbxQuery.starttime+ 
+        '\nEnd Time: ' + pbxQuery.endtime);
+
     axios.get('162.214.149.184:7225/sendysApi/customer/fetch?parameter=PHONE&value=' + phone) 
     .then(getResponse => {
         var customers = getResponse.data;
         var customerId = customers.IdCliente;
         var contactId = customers.IdContactoNoCliente;
-        
+
+        console.log('Customer ID: ' + customerId + '\nContact ID: ' + contactId);
+
         axios.post(tokenUrl, tokenRequest, { 
             headers:
                 {'Content-Type': 'text/xml'}
             }
         ).then(response => {
             var xmlData = response.data;
+            //console.log(description);
+
             parser.parseString(xmlData, (err, result) => {
                 if (err) {
                     console.error('Error parsing XML:', err);
@@ -472,13 +481,13 @@ exports.addCallDetails = async function (req, res) {
                     <Insert xmlns="capgemini/crm/webservices/contacto">\
                     <input>\
                         <IsHtml>false</IsHtml>\
-                        <IdCliente>' + req.query.customerId + '</IdCliente>\
+                        <IdCliente>' + customerId + '</IdCliente>\
                         <IdUtilizador>82</IdUtilizador>' +
                         '<IdTipoContacto>' + tipoChamada + '</IdTipoContacto>\
                         <IdAreaRelacionada>7</IdAreaRelacionada>' +
                         '<IdEstadoContacto>' + callStatus + '</IdEstadoContacto>\
                         <IdEstadoAprovacao>1</IdEstadoAprovacao>\
-                        <IdContactoNoCliente>' + req.query.contactId + '</IdContactoNoCliente>\
+                        <IdContactoNoCliente>' + contactId + '</IdContactoNoCliente>\
                         <ParaFacturar>false</ParaFacturar>\
                         <IdEstadoFacturacao>3</IdEstadoFacturacao>\
                         <Descricao>' + description + '</Descricao>\
@@ -508,7 +517,7 @@ exports.addCallDetails = async function (req, res) {
                         {'Content-Type': 'text/xml'}
                     }
                 ).then(userResponse => {
-                    console.log('Calls Journal not Logged: ' + userResponse.data);
+                    console.log('Calls Journal Logged: ' + userResponse.data);
                     res.json({ data: result['soap:Envelope']['soap:Body'] })
                 }).catch(userError => {
                     console.log('Calls Journal not Logged: ' + userError.code);
@@ -523,14 +532,8 @@ exports.addCallDetails = async function (req, res) {
             console.log(error);
         })
     }).catch(getError => {
-
+        console.log('GET Error: ' + getError)
     })
-    //console.log(description);
-    console.log('Status: ' + pbxQuery.status + 
-        '\nDescription: ' + pbxQuery.description +
-        '\nStart Time: ' + pbxQuery.starttime+ 
-        '\nEnd Time: ' + pbxQuery.endtime);
-
 }
 
 exports.getReferenceData = async function (req, res) {
