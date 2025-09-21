@@ -444,7 +444,7 @@ exports.addCallDetails = async function (req, res) {
         '\nDescription: ' + pbxQuery.description +
         '\nStart Time: ' + pbxQuery.starttime + 
         '\nEnd Time: ' + pbxQuery.endtime + 
-        '\Phone: ' + phone);
+        '\nPhone: ' + phone);
 
     axios.get('http://162.214.149.184:7225/sendysApi/customer/fetch', {
         params: {
@@ -454,8 +454,8 @@ exports.addCallDetails = async function (req, res) {
     }) 
     .then(getResponse => {
         var customers = getResponse.data;
-        var customerId = customers.IdCliente;
-        var contactId = customers.IdContactoNoCliente;
+        var customerId = customers['data'].IdCliente;
+        var contactId = customers['data'].IdContactoNoCliente;
 
         console.log('Customer ID: ' + customerId + '\nContact ID: ' + contactId);
 
