@@ -518,6 +518,8 @@ exports.addCallDetails = async function (req, res) {
                 </soap:Body>\
                 </soap:Envelope>';
 
+                console.log(userRequest);
+                
                 axios.post(userUrl, userRequest, {
                     headers:
                         {'Content-Type': 'text/xml'}
