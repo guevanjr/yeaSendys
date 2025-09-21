@@ -526,7 +526,7 @@ exports.addCallDetails = async function (req, res) {
                     console.log('Calls Journal Logged: ' + userResponse.data);
                     res.json({ data: result['soap:Envelope']['soap:Body'] })
                 }).catch(userError => {
-                    console.log('Calls Journal not Logged: ' + userError.code);
+                    console.log('Calls Journal not Logged: ' + userError);
                     res.send({
                         code: userError.code,
                         status: userError.response.status,
