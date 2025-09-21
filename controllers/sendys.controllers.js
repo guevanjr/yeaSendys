@@ -442,10 +442,11 @@ exports.addCallDetails = async function (req, res) {
 
     console.log('Status: ' + pbxQuery.status + 
         '\nDescription: ' + pbxQuery.description +
-        '\nStart Time: ' + pbxQuery.starttime+ 
-        '\nEnd Time: ' + pbxQuery.endtime);
+        '\nStart Time: ' + pbxQuery.starttime + 
+        '\nEnd Time: ' + pbxQuery.endtime + 
+        '\Phone: ' + phone);
 
-    axios.get('162.214.149.184:7225/sendysApi/customer/fetch', {
+    axios.get('http://162.214.149.184:7225/sendysApi/customer/fetch', {
         params: {
             parameter: 'PHONE',
             value: phone
