@@ -437,7 +437,7 @@ exports.addCallDetails = async function (req, res) {
 
     var tipoChamada = (pbxQuery.calldirection === "Inbound Call" ? 1 : 2);
     var callStatus = (pbxQuery.status === "Completed" ? 2 : 3);
-    var description = pbxQuery.description;
+    var description = ((pbxQuery.description).toString().replaceAll('<', '[')).replaceAll('>', ']');
     var phone = (tipoChamada === 1 ? pbxQuery.from : pbxQuery.to);
 
     console.log('Status: ' + pbxQuery.status + 
@@ -519,7 +519,7 @@ exports.addCallDetails = async function (req, res) {
                 </soap:Envelope>';
 
                 console.log(userRequest);
-                
+
                 axios.post(userUrl, userRequest, {
                     headers:
                         {'Content-Type': 'text/xml'}
