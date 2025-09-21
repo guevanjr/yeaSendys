@@ -435,29 +435,19 @@ exports.addTasks = async function (req, res) {
 }
 
 exports.addCallDetails = async function (req, res) {
-/*    
-    const jsonSafeReq = {
-    method: req.method,
-    url: req.url,
-    headers: req.headers,
-    query: req.query,
-    params: req.params,
-    body: req.body
-  };
-  
-  console.log(JSON.stringify(jsonSafeReq, null, 2));
-*/
     var pbxQuery = req.body;
     console.log(pbxQuery);
 
-    var tipoChamada = (req.query.calldirection === "Inbound" ? 1 : 2);
-    var callStatus = (req.query.status === "OK" ? 2 : 3);
-    var description = req.query.description;
+    var tipoChamada = (pbxQuery['data'].calldirection === "Inbound Call" ? 1 : 2);
+    var callStatus = (pbxQuery['data'].status === "Completed" ? 2 : 3);
+    var description = pbxQuery['data'].description;
+    var phone = (tipoChamada === 1 ? pbxQuery['data'].from : pbxQuery['data'].to);
+
     //console.log(description);
-    console.log('Status: ' + pbxQuery.status + 
-        '\nDescription: ' + pbxQuery.description +
-        '\nStart Time: ' + pbxQuery.starttime+ 
-        '\nEnd Time: ' + pbxQuery.endtime);
+    console.log('Status: ' + pbxQuery['data'].status + 
+        '\nDescription: ' + pbxQuery['data'].description +
+        '\nStart Time: ' + pbxQuery['data'].starttime+ 
+        '\nEnd Time: ' + pbxQuery['data'].endtime);
 
     axios.post(tokenUrl, tokenRequest, { 
         headers:
@@ -471,10 +461,7 @@ exports.addCallDetails = async function (req, res) {
                 return;
             }
             // Accessing data within the envelope
-            //var isGranted = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.AccessGranted;
             var token = result['soap:Envelope']['soap:Body'].LoginResponse.LoginResult.Token;
-            //.log('\nIs Granted: ' + isGranted);
-            //console.log('Token: ' + token);    
             
             var userUrl = 'http://crm.aqi.co.mz/SendysCRM/webservices/Contacto.asmx';
             var userRequest = '<?xml version="1.0" encoding="utf-8"?>\
@@ -490,22 +477,19 @@ exports.addCallDetails = async function (req, res) {
                     <IsHtml>false</IsHtml>\
                     <IdCliente>' + req.query.customerId + '</IdCliente>\
                     <IdUtilizador>82</IdUtilizador>' +
-                    //<IdBolsaContacto>1</IdBolsaContacto>\
-                    //<IdContactoOrigem>' + req.query.phone + '</IdContactoOrigem>\
                     '<IdTipoContacto>' + tipoChamada + '</IdTipoContacto>\
                     <IdAreaRelacionada>7</IdAreaRelacionada>' +
-                    //<IdContrato>1</IdContrato>\
                     '<IdEstadoContacto>' + callStatus + '</IdEstadoContacto>\
                     <IdEstadoAprovacao>1</IdEstadoAprovacao>\
                     <IdContactoNoCliente>' + req.query.contactId + '</IdContactoNoCliente>\
                     <ParaFacturar>false</ParaFacturar>\
                     <IdEstadoFacturacao>3</IdEstadoFacturacao>\
                     <Descricao>' + description + '</Descricao>\
-                    <Contacto>' + req.query.phone + '</Contacto>\
-                    <Assunto>' + req.query.subject + '</Assunto>\
+                    <Contacto>' + phone + '</Contacto>\
+                    <Assunto>' + pbxQuery['data'].subject + '</Assunto>\
                     <NumeroFactura></NumeroFactura>\
-                    <HoraInicio>' + new Date(req.query.starttime).toISOString() + '</HoraInicio>\
-                    <HoraFim>' + new Date(req.query.endtime).toISOString()  + '</HoraFim>\
+                    <HoraInicio>' + pbxQuery['data'].starttime + '</HoraInicio>\
+                    <HoraFim>' + pbxQuery['data'].endtime  + '</HoraFim>\
                     <IdUtilizador_C>82</IdUtilizador_C>\
                     <Attachments>\
                     <base64Binary></base64Binary>\
@@ -538,8 +522,6 @@ exports.addCallDetails = async function (req, res) {
                 })
             })
         });
-
-        //console.log('\n*** ===== FULL RESPONSE === ***\n' + response.data);
     }).catch(error => {
         console.log(error);
     })
