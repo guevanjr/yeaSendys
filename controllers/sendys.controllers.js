@@ -431,21 +431,17 @@ exports.addTasks = async function (req, res) {
     })
 }
 
+/* === DONE === */
 exports.addCallDetails = async function (req, res) {
     var pbxQuery = req.body.data[0];
-    console.log(pbxQuery);
+    //console.log(pbxQuery);
 
     var tipoChamada = (pbxQuery.calldirection === "Inbound Call" ? 1 : 2);
     var callStatus = (pbxQuery.status === "Completed" ? 2 : 3);
     var description = ((pbxQuery.description).toString().replaceAll('<', '[')).replaceAll('>', ']');
     var phone = (tipoChamada === 1 ? pbxQuery.from : pbxQuery.to);
 
-    console.log('Status: ' + pbxQuery.status + 
-        '\nDescription: ' + pbxQuery.description +
-        '\nStart Time: ' + pbxQuery.starttime + 
-        '\nEnd Time: ' + pbxQuery.endtime + 
-        '\nPhone: ' + phone);
-
+    // Get Customer ID and Contact ID from Caller / Callee Number
     axios.get('http://162.214.149.184:7225/sendysApi/customer/fetch', {
         params: {
             parameter: 'PHONE',
